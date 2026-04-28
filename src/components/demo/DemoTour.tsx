@@ -50,15 +50,14 @@ export function DemoTour({ steps, onFinish }: { steps: TourStep[]; onFinish: () 
         <div className="absolute bg-black/70" style={{ top: rect.top - pad, left: 0, width: rect.left - pad, height: rect.height + pad * 2 }} />
         <div className="absolute bg-black/70" style={{ top: rect.top - pad, left: rect.right + pad, right: 0, height: rect.height + pad * 2 }} />
         <div
-          className="absolute rounded-xl ring-4 animate-pulse-soft"
+          className="absolute rounded-xl animate-pulse-soft"
           style={{
             top: rect.top - pad,
             left: rect.left - pad,
             width: rect.width + pad * 2,
             height: rect.height + pad * 2,
-            ringColor: "var(--rose-gold)",
-            boxShadow: "0 0 0 4px var(--rose-gold), 0 0 40px var(--rose-gold)",
-          } as React.CSSProperties}
+            boxShadow: "0 0 0 4px var(--rose-gold), 0 0 60px var(--rose-gold)",
+          }}
         />
       </div>
 
