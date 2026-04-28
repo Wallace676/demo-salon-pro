@@ -29,14 +29,21 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Sistema de Gestão para Salão de Beleza" },
+      { name: "description", content: "Sistema completo de gestão para salões de beleza 
+com agendamentos, clientes, relatórios e bot WhatsApp 24h" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Sistema de Gestão para Salão de Beleza" },
+      { property: "og:description", content: "Sistema completo de gestão para salões de beleza 
+com agendamentos, clientes, relatórios e bot WhatsApp 24h" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Sistema de Gestão para Salão de Beleza" },
+      { name: "twitter:description", content: "Sistema completo de gestão para salões de beleza 
+com agendamentos, clientes, relatórios e bot WhatsApp 24h" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2d68e32b-2375-43a7-937c-9ab84c6813fe/id-preview-e889fe66--6f77dc6a-178d-4327-8d3c-023ba1306dc3.lovable.app-1777409857291.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2d68e32b-2375-43a7-937c-9ab84c6813fe/id-preview-e889fe66--6f77dc6a-178d-4327-8d3c-023ba1306dc3.lovable.app-1777409857291.png" },
     ],
     links: [
       {
