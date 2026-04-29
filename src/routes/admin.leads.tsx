@@ -63,6 +63,7 @@ function LeadsPage() {
                   <th className="px-4 py-3 font-semibold text-xs uppercase">Responsável</th>
                   <th className="px-4 py-3 font-semibold text-xs uppercase">WhatsApp</th>
                   <th className="px-4 py-3 font-semibold text-xs uppercase">Cidade</th>
+                  <th className="px-4 py-3 font-semibold text-xs uppercase">Plano</th>
                   <th className="px-4 py-3 font-semibold text-xs uppercase">Data</th>
                 </tr>
               </thead>
@@ -73,6 +74,7 @@ function LeadsPage() {
                     <td className="px-4 py-3 text-foreground">{l.contactName}</td>
                     <td className="px-4 py-3 text-foreground">{l.whatsapp}</td>
                     <td className="px-4 py-3 text-foreground">{l.city}</td>
+                    <td className="px-4 py-3 text-foreground">{l.plan || "—"}</td>
                     <td className="px-4 py-3 text-muted-foreground text-xs">{new Date(l.createdAt).toLocaleString("pt-BR")}</td>
                   </tr>
                 ))}
