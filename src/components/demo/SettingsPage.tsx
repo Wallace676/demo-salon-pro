@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Download, Inbox, Upload, Check } from "lucide-react";
 import { useSettings, updateSettings, THEME_OPTIONS, DAYS, type ThemeName } from "@/lib/demoSettings";
 import { getLeads, leadsToCSV, type Lead } from "@/lib/demoData";
 import { toast } from "sonner";
-import { useEffect } from "react";
 
 export function SettingsPage() {
   const settings = useSettings();
