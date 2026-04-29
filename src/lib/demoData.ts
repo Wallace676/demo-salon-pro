@@ -69,6 +69,7 @@ export type Lead = {
   contactName: string;
   whatsapp: string;
   city: string;
+  plan?: string;
   createdAt: string;
 };
 
@@ -96,10 +97,10 @@ export function saveLead(lead: Omit<Lead, "id" | "createdAt">): Lead {
 }
 
 export function leadsToCSV(leads: Lead[]): string {
-  const header = "Salão,Responsável,WhatsApp,Cidade,Data\n";
+  const header = "Salão,Responsável,WhatsApp,Cidade,Plano,Data\n";
   const rows = leads
     .map((l) =>
-      [l.salonName, l.contactName, l.whatsapp, l.city, new Date(l.createdAt).toLocaleString("pt-BR")]
+      [l.salonName, l.contactName, l.whatsapp, l.city, l.plan || "", new Date(l.createdAt).toLocaleString("pt-BR")]
         .map((v) => `"${String(v).replace(/"/g, '""')}"`)
         .join(",")
     )
