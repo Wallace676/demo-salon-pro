@@ -11,7 +11,7 @@ function maskPhone(v: string) {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
-export function ExitDemoModal({ onClose }: { onClose: () => void }) {
+export function ExitDemoModal({ onClose, plan }: { onClose: () => void; plan?: string }) {
   const [form, setForm] = useState({ salonName: "", contactName: "", whatsapp: "", city: "" });
   const [done, setDone] = useState(false);
   const [err, setErr] = useState("");
@@ -26,7 +26,7 @@ export function ExitDemoModal({ onClose }: { onClose: () => void }) {
       setErr("WhatsApp inválido");
       return;
     }
-    saveLead(form);
+    saveLead({ ...form, plan });
     setDone(true);
   };
 
