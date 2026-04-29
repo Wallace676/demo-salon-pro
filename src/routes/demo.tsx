@@ -182,63 +182,195 @@ function NavItem({
 }
 
 function Landing({ onStart, salonName }: { onStart: () => void; salonName: string }) {
+  const [planLead, setPlanLead] = useState<string | null>(null);
   return (
-    <div className="min-h-screen px-4 py-10" style={{ background: "var(--gradient-rose-soft)" }}>
-      <div className="max-w-5xl mx-auto text-center animate-slide-up">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-6" style={{ background: "white", color: "var(--rose-gold-dark)", boxShadow: "var(--shadow-rose)" }}>
-          <Sparkles className="w-3 h-3" /> Demonstração interativa gratuita
-        </div>
-        <h1 className="text-4xl md:text-6xl font-bold text-foreground tracking-tight mb-4">
-          Veja seu salão funcionando<br />
-          <span style={{ background: "var(--gradient-rose-gold)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-            no automático
-          </span>
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground mb-8">
-          Sistema completo de gestão + Bot WhatsApp 24h
-        </p>
+    <div className="min-h-screen" style={{ background: "var(--gradient-rose-soft)" }}>
+      <div className="px-4 py-10">
+        <div className="max-w-5xl mx-auto text-center animate-slide-up">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-6" style={{ background: "white", color: "var(--rose-gold-dark)", boxShadow: "var(--shadow-rose)" }}>
+            <Sparkles className="w-3 h-3" /> Demonstração interativa gratuita
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground tracking-tight mb-4">
+            Veja seu salão funcionando<br />
+            <span style={{ background: "var(--gradient-rose-gold)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+              no automático
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground mb-8">
+            Sistema completo de gestão + Bot WhatsApp 24h
+          </p>
 
-        <button
-          onClick={onStart}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white font-semibold text-lg transition-transform hover:scale-105"
-          style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-elegant)" }}
-        >
-          <Play className="w-5 h-5" /> Iniciar Demonstração Gratuita <ArrowRight className="w-5 h-5" />
-        </button>
-        <p className="text-xs text-muted-foreground mt-4 mb-12">Sem cadastro • Sem cartão de crédito</p>
+          <button
+            onClick={onStart}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white font-semibold text-lg transition-transform hover:scale-105"
+            style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-elegant)" }}
+          >
+            <Play className="w-5 h-5" /> Iniciar Demonstração Gratuita <ArrowRight className="w-5 h-5" />
+          </button>
+          <p className="text-xs text-muted-foreground mt-4 mb-12">Sem cadastro • Sem cartão de crédito</p>
 
-        {/* Mari section */}
-        <div className="mt-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Veja a IA em ação</h2>
-          <p className="text-muted-foreground mb-8">Conheça a Mari, sua atendente virtual humanizada — disponível 24h.</p>
-          <div className="grid lg:grid-cols-2 gap-8 items-center text-left">
-            <MariSimulation />
-            <div className="space-y-3">
-              <HighlightCard icon={<Brain />} title="Entende erros de português" desc="Compreende digitação errada, gírias e abreviações como uma pessoa real." />
-              <HighlightCard icon={<MessageSquareHeart />} title="Fala como uma atendente real" desc="Tom caloroso, emojis e empatia em cada resposta. Seus clientes amam." />
-              <HighlightCard icon={<Zap />} title="Responde em menos de 2 segundos" desc="Atendimento instantâneo, mesmo de madrugada. Nunca perde um agendamento." />
-              <div className="rounded-xl p-5 text-white mt-4" style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}>
-                <div className="text-3xl font-bold">+38%</div>
-                <div className="text-sm opacity-95">de agendamentos no primeiro mês para {salonName}</div>
+          {/* Mari section */}
+          <div className="mt-16">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Veja a IA em ação</h2>
+            <p className="text-muted-foreground mb-8">Conheça a Mari, sua atendente virtual humanizada — disponível 24h.</p>
+            <div className="grid lg:grid-cols-2 gap-8 items-center text-left">
+              <MariSimulation />
+              <div className="space-y-3">
+                <HighlightCard icon={<Brain />} title="Entende erros de português" desc="Compreende digitação errada, gírias e abreviações como uma pessoa real." />
+                <HighlightCard icon={<MessageSquareHeart />} title="Fala como uma atendente real" desc="Tom caloroso, emojis e empatia em cada resposta. Seus clientes amam." />
+                <HighlightCard icon={<Zap />} title="Responde em menos de 2 segundos" desc="Atendimento instantâneo, mesmo de madrugada. Nunca perde um agendamento." />
+                <div className="rounded-xl p-5 text-white mt-4" style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}>
+                  <div className="text-3xl font-bold">+38%</div>
+                  <div className="text-sm opacity-95">de agendamentos no primeiro mês para {salonName}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <PricingSection onChoose={(p) => setPlanLead(p)} />
+
+      {planLead && <ExitDemoModal plan={planLead} onClose={() => setPlanLead(null)} />}
     </div>
   );
 }
 
-function HighlightCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+function PricingSection({ onChoose }: { onChoose: (plan: string) => void }) {
   return (
-    <div className="bg-card rounded-xl p-4 border border-border flex gap-3 items-start">
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: "var(--gradient-rose-gold)" }}>
-        {icon}
+    <section className="relative px-4 py-20 mt-16" style={{ background: "#0A0A0A" }}>
+      {/* Top divider */}
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "var(--gradient-rose-gold)", opacity: 0.7 }} />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 -translate-y-1/2 rounded-full blur-3xl opacity-30" style={{ background: "var(--gradient-rose-gold)" }} />
+
+      <div className="max-w-5xl mx-auto text-center relative">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+          Escolha como você quer ter o sistema
+        </h2>
+        <p className="text-base md:text-lg text-white/60 mb-12">Sem letra miúda. Sem surpresa.</p>
+
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-stretch text-left">
+          {/* CARD 1 — Owner */}
+          <PricingCard
+            icon="🏆"
+            badge="PAGAMENTO ÚNICO"
+            title="Quero ser dono"
+            price="R$ 2.500"
+            priceSubtitle="pagamento único, sem mensalidade"
+            benefits={[
+              "Sistema instalado no seu servidor",
+              "Seu nome e logo no sistema",
+              "Bot WhatsApp com IA humanizada",
+              "Você é dono para sempre",
+              "Suporte por 60 dias incluído",
+              "Nunca paga mensalidade",
+            ]}
+            ctaLabel="Quero ser dono →"
+            ctaVariant="solid"
+            onClick={() => onChoose("Pagamento único — R$ 2.500")}
+          />
+
+          {/* CARD 2 — Subscription (highlighted) */}
+          <PricingCard
+            icon="💅"
+            badge="MAIS ESCOLHIDO"
+            title="Quero pagar por mês"
+            price="R$ 129"
+            priceSuffix="/mês"
+            priceSubtitle="sem taxa de instalação"
+            benefits={[
+              "Sistema pronto em 24 horas",
+              "Seu nome e logo no sistema",
+              "Bot WhatsApp com IA humanizada",
+              "Atualizações automáticas incluídas",
+              "Suporte prioritário sempre",
+              "Cancela quando quiser",
+            ]}
+            ctaLabel="Começar agora →"
+            ctaVariant="dark"
+            highlighted
+            onClick={() => onChoose("Mensal — R$ 129/mês")}
+          />
+        </div>
+
+        <p className="text-sm md:text-base mt-10 font-medium" style={{ color: "var(--rose-gold-light)" }}>
+          💛 Economia de até R$1.800/ano comparado a uma recepcionista
+        </p>
       </div>
-      <div>
-        <h3 className="font-semibold text-foreground">{title}</h3>
-        <p className="text-sm text-muted-foreground">{desc}</p>
+    </section>
+  );
+}
+
+function PricingCard({
+  icon, badge, title, price, priceSuffix, priceSubtitle, benefits, ctaLabel, ctaVariant, highlighted, onClick,
+}: {
+  icon: string;
+  badge: string;
+  title: string;
+  price: string;
+  priceSuffix?: string;
+  priceSubtitle: string;
+  benefits: string[];
+  ctaLabel: string;
+  ctaVariant: "solid" | "dark";
+  highlighted?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      className={`relative rounded-2xl p-6 md:p-8 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 ${highlighted ? "md:scale-[1.04]" : ""}`}
+      style={{
+        background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
+        border: highlighted ? "1.5px solid var(--rose-gold)" : "1px solid rgba(255,255,255,0.08)",
+        boxShadow: highlighted
+          ? "0 0 40px -10px var(--rose-gold), 0 20px 60px -20px rgba(0,0,0,0.6)"
+          : "0 20px 50px -25px rgba(0,0,0,0.6)",
+      }}
+    >
+      <div
+        className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider"
+        style={
+          highlighted
+            ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
+            : { background: "rgba(255,255,255,0.1)", color: "var(--rose-gold-light)", border: "1px solid rgba(255,255,255,0.15)" }
+        }
+      >
+        {badge}
       </div>
+
+      <div className="text-4xl mb-3">{icon}</div>
+      <h3 className="text-xl font-bold text-white mb-4">{title}</h3>
+
+      <div className="mb-5">
+        <div className="flex items-baseline gap-1">
+          <span className="text-4xl md:text-5xl font-bold" style={{ background: "var(--gradient-rose-gold)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            {price}
+          </span>
+          {priceSuffix && <span className="text-xl text-white/70 font-semibold">{priceSuffix}</span>}
+        </div>
+        <p className="text-xs text-white/50 mt-1">{priceSubtitle}</p>
+      </div>
+
+      <ul className="space-y-2.5 mb-7">
+        {benefits.map((b) => (
+          <li key={b} className="flex items-start gap-2 text-sm text-white/85">
+            <span className="text-base leading-5" style={{ color: "var(--rose-gold-light)" }}>✅</span>
+            <span>{b}</span>
+          </li>
+        ))}
+      </ul>
+
+      <button
+        onClick={onClick}
+        className="w-full py-3 rounded-xl font-semibold text-sm transition-transform hover:scale-[1.02]"
+        style={
+          ctaVariant === "solid"
+            ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
+            : { background: "#141414", color: "white", border: "1.5px solid var(--rose-gold)" }
+        }
+      >
+        {ctaLabel}
+      </button>
     </div>
   );
 }
