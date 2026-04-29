@@ -181,6 +181,20 @@ function NavItem({
   );
 }
 
+function HighlightCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+  return (
+    <div className="bg-card rounded-xl p-4 border border-border flex gap-3 items-start">
+      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: "var(--gradient-rose-gold)" }}>
+        {icon}
+      </div>
+      <div>
+        <h3 className="font-semibold text-foreground">{title}</h3>
+        <p className="text-sm text-muted-foreground">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
 function Landing({ onStart, salonName }: { onStart: () => void; salonName: string }) {
   const [planLead, setPlanLead] = useState<string | null>(null);
   return (
@@ -375,19 +389,6 @@ function PricingCard({
   );
 }
 
-function HighlightCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
-  return (
-    <div className="bg-card rounded-xl p-4 border border-border flex gap-3 items-start">
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: "var(--gradient-rose-gold)" }}>
-        {icon}
-      </div>
-      <div>
-        <h3 className="font-semibold text-foreground">{title}</h3>
-        <p className="text-sm text-muted-foreground">{desc}</p>
-      </div>
-    </div>
-  );
-}
 
 function Dashboard({ ownerName }: { ownerName: string }) {
   const appts = appointmentsStore.use();
