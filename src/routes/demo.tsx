@@ -257,17 +257,17 @@ function PricingSection({ onChoose }: { onChoose: (plan: string) => void }) {
       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "var(--gradient-rose-gold)", opacity: 0.7 }} />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 -translate-y-1/2 rounded-full blur-3xl opacity-30" style={{ background: "var(--gradient-rose-gold)" }} />
 
-      <div className="max-w-5xl mx-auto text-center relative">
+      <div className="max-w-6xl mx-auto text-center relative">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
           Escolha como você quer ter o sistema
         </h2>
         <p className="text-base md:text-lg text-white/60 mb-12">Sem letra miúda. Sem surpresa.</p>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-stretch text-left">
-          {/* CARD 1 — Owner */}
+        <div className="grid md:grid-cols-3 gap-6 md:gap-6 items-stretch text-left">
+          {/* CARD 1 — Starter / Owner */}
           <PricingCard
             icon="🏆"
-            badge="PAGAMENTO ÚNICO"
+            badge="STARTER"
             title="Quero ser dono"
             price="R$ 2.500"
             priceSubtitle="pagamento único, sem mensalidade"
@@ -280,11 +280,11 @@ function PricingSection({ onChoose }: { onChoose: (plan: string) => void }) {
               "Nunca paga mensalidade",
             ]}
             ctaLabel="Quero ser dono →"
-            ctaVariant="solid"
-            onClick={() => onChoose("Pagamento único — R$ 2.500")}
+            ctaVariant="dark"
+            onClick={() => onChoose("Starter — R$ 2.500 único")}
           />
 
-          {/* CARD 2 — Subscription (highlighted) */}
+          {/* CARD 2 — Mensal (highlighted) */}
           <PricingCard
             icon="💅"
             badge="MAIS ESCOLHIDO"
@@ -301,9 +301,31 @@ function PricingSection({ onChoose }: { onChoose: (plan: string) => void }) {
               "Cancela quando quiser",
             ]}
             ctaLabel="Começar agora →"
-            ctaVariant="dark"
+            ctaVariant="solid"
             highlighted
             onClick={() => onChoose("Mensal — R$ 129/mês")}
+          />
+
+          {/* CARD 3 — Anual */}
+          <PricingCard
+            icon="💎"
+            badge="MELHOR CUSTO BENEFÍCIO"
+            title="Quero pagar anual"
+            price="R$ 99"
+            priceSuffix="/mês"
+            priceSubtitle="R$ 1.188 à vista (12x R$99) • economize R$360/ano"
+            benefits={[
+              "Sistema pronto em 24 horas",
+              "Seu nome e logo no sistema",
+              "Bot WhatsApp com IA humanizada",
+              "Atualizações automáticas incluídas",
+              "Suporte prioritário sempre",
+              "🎁 2 meses grátis (economia R$360/ano)",
+              "🎁 Suporte VIP com WhatsApp direto",
+            ]}
+            ctaLabel="Quero economizar →"
+            ctaVariant="dark"
+            onClick={() => onChoose("Anual — R$ 1.188 (R$ 99/mês)")}
           />
         </div>
 
