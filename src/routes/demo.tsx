@@ -30,6 +30,10 @@ import { SettingsPage } from "@/components/demo/SettingsPage";
 import { Confetti } from "@/components/demo/Confetti";
 import { DEMO_CLIENTS, DEMO_STATS } from "@/lib/demoData";
 import { useSettings } from "@/lib/demoSettings";
+import { useProfile, setProfile, EMPLOYEE_NAME, type Profile } from "@/lib/demoProfile";
+import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
+import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
+import { Crown } from "lucide-react";
 import {
   appointmentsStore,
   servicesStore,
@@ -60,7 +64,7 @@ const TOUR_STEPS: TourStep[] = [
   { targetId: "tour-cta", title: "Pronto?", description: "Pronto para transformar seu salão? 💅" },
 ];
 
-type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings";
+type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions";
 
 const TOUR_KEY = "demo_tour_seen_v2";
 
@@ -70,6 +74,15 @@ function DemoPage() {
   const [tourActive, setTourActive] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const settings = useSettings();
+  const profile = useProfile();
+  const isEmployee = profile === "employee";
+
+  // Reset tab if current tab isn't allowed for this profile
+  useEffect(() => {
+    if (isEmployee && !["dashboard", "appointments", "commissions"].includes(tab)) {
+      setTab("dashboard");
+    }
+  }, [isEmployee, tab]);
 
   const startDemo = () => {
     setStarted(true);
@@ -82,24 +95,46 @@ function DemoPage() {
 
   if (!started) return <Landing onStart={startDemo} salonName={settings.salonName} />;
 
+  const mobileTabs: Tab[] = isEmployee
+    ? ["dashboard", "appointments", "commissions"]
+    : ["dashboard", "appointments", "clients", "services", "bot", "reports", "settings"];
+
   return (
     <div className="min-h-screen bg-background">
       <DemoBadge />
 
       <div className="flex min-h-screen">
-        <aside className="w-60 border-r border-border bg-card hidden md:flex flex-col">
+        <aside
+          className="w-60 border-r border-border hidden md:flex flex-col transition-colors duration-300"
+          style={
+            isEmployee
+              ? { background: "linear-gradient(180deg, oklch(0.98 0.015 25), var(--card))" }
+              : { background: "var(--card)" }
+          }
+        >
           <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
-            <span className="font-bold truncate">{settings.salonName}</span>
+            <span className="font-bold truncate">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
           </div>
           <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-            <NavItem id="tour-dashboard" active={tab === "dashboard"} onClick={() => setTab("dashboard")} icon={<LayoutDashboard className="w-4 h-4" />}>Dashboard</NavItem>
-            <NavItem id="tour-appointments" active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Agendamentos</NavItem>
-            <NavItem id="tour-clients" active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Clientes</NavItem>
-            <NavItem active={tab === "services"} onClick={() => setTab("services")} icon={<Scissors className="w-4 h-4" />}>Serviços</NavItem>
-            <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
-            <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
-            <NavItem active={tab === "settings"} onClick={() => setTab("settings")} icon={<SettingsIcon className="w-4 h-4" />}>Configurações</NavItem>
+            {isEmployee ? (
+              <>
+                <NavItem active={tab === "dashboard"} onClick={() => setTab("dashboard")} icon={<LayoutDashboard className="w-4 h-4" />}>Início</NavItem>
+                <NavItem active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Minha Agenda</NavItem>
+                <NavItem active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Meus Clientes</NavItem>
+                <NavItem active={tab === "commissions"} onClick={() => setTab("commissions")} icon={<DollarSign className="w-4 h-4" />}>Minhas Comissões</NavItem>
+              </>
+            ) : (
+              <>
+                <NavItem id="tour-dashboard" active={tab === "dashboard"} onClick={() => setTab("dashboard")} icon={<LayoutDashboard className="w-4 h-4" />}>Dashboard</NavItem>
+                <NavItem id="tour-appointments" active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Agendamentos</NavItem>
+                <NavItem id="tour-clients" active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Clientes</NavItem>
+                <NavItem active={tab === "services"} onClick={() => setTab("services")} icon={<Scissors className="w-4 h-4" />}>Serviços</NavItem>
+                <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
+                <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
+                <NavItem active={tab === "settings"} onClick={() => setTab("settings")} icon={<SettingsIcon className="w-4 h-4" />}>Configurações</NavItem>
+              </>
+            )}
           </nav>
           <div className="p-3 border-t border-border">
             <button
@@ -115,7 +150,7 @@ function DemoPage() {
 
         <main className="flex-1 p-6 md:p-8 overflow-x-hidden">
           <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-2">
-            {(["dashboard", "appointments", "clients", "services", "bot", "reports", "settings"] as Tab[]).map((t) => (
+            {mobileTabs.map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -127,13 +162,14 @@ function DemoPage() {
             ))}
           </div>
 
-          {tab === "dashboard" && <Dashboard ownerName={settings.ownerName} />}
-          {tab === "appointments" && <Appointments />}
+          {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} />)}
+          {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
           {tab === "clients" && <Clients />}
-          {tab === "services" && <Services />}
-          {tab === "bot" && <BotPage />}
-          {tab === "reports" && <Reports />}
-          {tab === "settings" && <SettingsPage />}
+          {tab === "services" && !isEmployee && <Services />}
+          {tab === "bot" && !isEmployee && <BotPage />}
+          {tab === "reports" && !isEmployee && <Reports />}
+          {tab === "settings" && !isEmployee && <SettingsPage />}
+          {tab === "commissions" && isEmployee && <EmployeeCommissions />}
 
           <div className="md:hidden mt-6">
             <button
@@ -147,7 +183,7 @@ function DemoPage() {
         </main>
       </div>
 
-      {tourActive && <DemoTour steps={TOUR_STEPS} onFinish={() => setTourActive(false)} />}
+      {tourActive && !isEmployee && <DemoTour steps={TOUR_STEPS} onFinish={() => setTourActive(false)} />}
       {exitOpen && <ExitDemoModal onClose={() => setExitOpen(false)} />}
     </div>
   );
@@ -213,6 +249,8 @@ function Landing({ onStart, salonName }: { onStart: () => void; salonName: strin
           <p className="text-lg md:text-xl text-muted-foreground mb-8">
             Sistema completo de gestão + Bot WhatsApp 24h
           </p>
+
+          <ProfileSelector />
 
           <button
             onClick={onStart}
@@ -420,6 +458,13 @@ function Dashboard({ ownerName }: { ownerName: string }) {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <div
+        className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white"
+        style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+      >
+        <Crown className="w-4 h-4" />
+        <span>👑 Visão da Dona — você vê tudo do salão</span>
+      </div>
       <div>
         <h1 className="text-2xl font-bold text-foreground">Olá, {ownerName}! 👋</h1>
         <p className="text-muted-foreground text-sm">Aqui está o resumo do seu salão hoje.</p>
@@ -494,8 +539,10 @@ function StatCard({ icon, label, value, accent }: { icon: React.ReactNode; label
   );
 }
 
-function Appointments() {
-  const appts = appointmentsStore.use();
+function Appointments({ isEmployee = false }: { isEmployee?: boolean }) {
+  const all = appointmentsStore.use();
+  // Pretend employee Carla owns roughly half the schedule
+  const appts = isEmployee ? all.filter((_, i) => i % 2 === 0) : all;
   const [open, setOpen] = useState(false);
   const [confetti, setConfetti] = useState(false);
 
@@ -511,15 +558,29 @@ function Appointments() {
   return (
     <div className="space-y-4 animate-fade-in">
       {confetti && <Confetti duration={2000} />}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold text-foreground">Agendamentos</h1>
-        <button
-          onClick={handleNew}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-white font-semibold text-sm transition-transform hover:scale-105"
-          style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+      {isEmployee && (
+        <div
+          className="rounded-lg px-4 py-2.5 text-sm font-medium border"
+          style={{
+            background: "oklch(0.97 0.025 25)",
+            borderColor: "var(--rose-gold)",
+            color: "var(--rose-gold-dark)",
+          }}
         >
-          <Plus className="w-4 h-4" /> Novo Agendamento
-        </button>
+          💅 Visão da Funcionária — você vê apenas sua agenda
+        </div>
+      )}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <h1 className="text-2xl font-bold text-foreground">{isEmployee ? "Minha Agenda" : "Agendamentos"}</h1>
+        {!isEmployee && (
+          <button
+            onClick={handleNew}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-white font-semibold text-sm transition-transform hover:scale-105"
+            style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+          >
+            <Plus className="w-4 h-4" /> Novo Agendamento
+          </button>
+        )}
       </div>
       <div className="bg-card rounded-xl border border-border overflow-x-auto">
         <table className="w-full text-sm">
@@ -546,6 +607,83 @@ function Appointments() {
         </table>
       </div>
       {open && <NewAppointmentModal onClose={() => { setOpen(false); setConfetti(true); }} />}
+    </div>
+  );
+}
+
+function EmployeeDashboard() {
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Olá, {EMPLOYEE_NAME}! 💅</h1>
+        <p className="text-muted-foreground text-sm">Aqui está sua agenda de hoje</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <StatCard icon={<Calendar />} label="Seus agendamentos hoje" value="4" accent />
+        <StatCard icon={<DollarSign />} label="Seu faturamento hoje" value="R$ 320" />
+        <StatCard icon={<Clock />} label="Sua próxima cliente" value="Ana Silva 14h" />
+      </div>
+
+      <EmployeeNotification />
+
+      <div className="bg-card rounded-xl p-5 border border-border">
+        <h2 className="font-semibold text-foreground mb-3">Sua agenda de hoje</h2>
+        <div className="space-y-2">
+          {[
+            { name: "Ana Silva", service: "Corte Feminino", time: "14:00" },
+            { name: "Camila Oliveira", service: "Manicure", time: "15:00" },
+            { name: "Beatriz Souza", service: "Hidratação", time: "16:30" },
+            { name: "Patricia Rocha", service: "Sobrancelha Design", time: "18:00" },
+          ].map((a) => (
+            <div key={a.time} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm" style={{ background: "var(--gradient-rose-gold)" }}>
+                {a.name.charAt(0)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-sm text-foreground truncate">{a.name}</div>
+                <div className="text-xs text-muted-foreground truncate">{a.service}</div>
+              </div>
+              <div className="text-sm font-medium text-foreground flex items-center gap-1">
+                <Clock className="w-3 h-3" /> {a.time}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfileSelector() {
+  const profile = useProfile();
+  const Btn = ({ value, icon, label }: { value: Profile; icon: string; label: string }) => {
+    const active = profile === value;
+    return (
+      <button
+        onClick={() => setProfile(value)}
+        className="px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 flex items-center gap-2"
+        style={
+          active
+            ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
+            : { background: "white", color: "var(--foreground)", border: "1px solid var(--border)" }
+        }
+      >
+        <span>{icon}</span> {label}
+      </button>
+    );
+  };
+
+  return (
+    <div className="mb-6 animate-fade-in">
+      <p className="text-sm text-muted-foreground mb-3">Quero ver o sistema como:</p>
+      <div className="inline-flex flex-wrap gap-2 justify-center p-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.6)", backdropFilter: "blur(8px)" }}>
+        <Btn value="owner" icon="👑" label="Dona do Salão" />
+        <Btn value="employee" icon="💅" label="Funcionária" />
+      </div>
+      <p className="text-xs text-muted-foreground mt-3">
+        A dona vê tudo. A funcionária vê apenas a própria agenda e comissões.
+      </p>
     </div>
   );
 }
