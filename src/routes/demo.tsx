@@ -250,6 +250,8 @@ function Landing({ onStart, salonName }: { onStart: () => void; salonName: strin
             Sistema completo de gestão + Bot WhatsApp 24h
           </p>
 
+          <ProfileSelector />
+
           <button
             onClick={onStart}
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white font-semibold text-lg transition-transform hover:scale-105"
