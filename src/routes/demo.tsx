@@ -311,21 +311,22 @@ function PricingSection({ onChoose }: { onChoose: (plan: string) => void }) {
             icon="💎"
             badge="MELHOR CUSTO BENEFÍCIO"
             title="Quero pagar anual"
-            price="R$ 99"
+            price="R$ 119"
             priceSuffix="/mês"
-            priceSubtitle="R$ 1.188 à vista (12x R$99) • economize R$360/ano"
+            priceSubtitle="R$ 1.428 à vista (12x R$119) • ECONOMIA DE R$120/ANO vs plano mensal"
             benefits={[
               "Sistema pronto em 24 horas",
               "Seu nome e logo no sistema",
               "Bot WhatsApp com IA humanizada",
               "Atualizações automáticas incluídas",
               "Suporte prioritário sempre",
-              "🎁 2 meses grátis (economia R$360/ano)",
+              "✅ IA humanizada incluída",
+              "✅ Prioridade em novos recursos",
               "🎁 Suporte VIP com WhatsApp direto",
             ]}
             ctaLabel="Quero economizar →"
             ctaVariant="dark"
-            onClick={() => onChoose("Anual — R$ 1.188 (R$ 99/mês)")}
+            onClick={() => onChoose("Anual — R$ 1.428 (R$ 119/mês)")}
           />
         </div>
 
