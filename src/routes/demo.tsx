@@ -30,6 +30,10 @@ import { SettingsPage } from "@/components/demo/SettingsPage";
 import { Confetti } from "@/components/demo/Confetti";
 import { DEMO_CLIENTS, DEMO_STATS } from "@/lib/demoData";
 import { useSettings } from "@/lib/demoSettings";
+import { useProfile, setProfile, EMPLOYEE_NAME, type Profile } from "@/lib/demoProfile";
+import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
+import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
+import { Crown, Sparkle } from "lucide-react";
 import {
   appointmentsStore,
   servicesStore,
