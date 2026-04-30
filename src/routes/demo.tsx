@@ -539,8 +539,10 @@ function StatCard({ icon, label, value, accent }: { icon: React.ReactNode; label
   );
 }
 
-function Appointments() {
-  const appts = appointmentsStore.use();
+function Appointments({ isEmployee = false }: { isEmployee?: boolean }) {
+  const all = appointmentsStore.use();
+  // Pretend employee Carla owns roughly half the schedule
+  const appts = isEmployee ? all.filter((_, i) => i % 2 === 0) : all;
   const [open, setOpen] = useState(false);
   const [confetti, setConfetti] = useState(false);
 
@@ -556,15 +558,29 @@ function Appointments() {
   return (
     <div className="space-y-4 animate-fade-in">
       {confetti && <Confetti duration={2000} />}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold text-foreground">Agendamentos</h1>
-        <button
-          onClick={handleNew}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-white font-semibold text-sm transition-transform hover:scale-105"
-          style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+      {isEmployee && (
+        <div
+          className="rounded-lg px-4 py-2.5 text-sm font-medium border"
+          style={{
+            background: "oklch(0.97 0.025 25)",
+            borderColor: "var(--rose-gold)",
+            color: "var(--rose-gold-dark)",
+          }}
         >
-          <Plus className="w-4 h-4" /> Novo Agendamento
-        </button>
+          💅 Visão da Funcionária — você vê apenas sua agenda
+        </div>
+      )}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <h1 className="text-2xl font-bold text-foreground">{isEmployee ? "Minha Agenda" : "Agendamentos"}</h1>
+        {!isEmployee && (
+          <button
+            onClick={handleNew}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-white font-semibold text-sm transition-transform hover:scale-105"
+            style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+          >
+            <Plus className="w-4 h-4" /> Novo Agendamento
+          </button>
+        )}
       </div>
       <div className="bg-card rounded-xl border border-border overflow-x-auto">
         <table className="w-full text-sm">
@@ -591,6 +607,83 @@ function Appointments() {
         </table>
       </div>
       {open && <NewAppointmentModal onClose={() => { setOpen(false); setConfetti(true); }} />}
+    </div>
+  );
+}
+
+function EmployeeDashboard() {
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Olá, {EMPLOYEE_NAME}! 💅</h1>
+        <p className="text-muted-foreground text-sm">Aqui está sua agenda de hoje</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <StatCard icon={<Calendar />} label="Seus agendamentos hoje" value="4" accent />
+        <StatCard icon={<DollarSign />} label="Seu faturamento hoje" value="R$ 320" />
+        <StatCard icon={<Clock />} label="Sua próxima cliente" value="Ana Silva 14h" />
+      </div>
+
+      <EmployeeNotification />
+
+      <div className="bg-card rounded-xl p-5 border border-border">
+        <h2 className="font-semibold text-foreground mb-3">Sua agenda de hoje</h2>
+        <div className="space-y-2">
+          {[
+            { name: "Ana Silva", service: "Corte Feminino", time: "14:00" },
+            { name: "Camila Oliveira", service: "Manicure", time: "15:00" },
+            { name: "Beatriz Souza", service: "Hidratação", time: "16:30" },
+            { name: "Patricia Rocha", service: "Sobrancelha Design", time: "18:00" },
+          ].map((a) => (
+            <div key={a.time} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm" style={{ background: "var(--gradient-rose-gold)" }}>
+                {a.name.charAt(0)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-sm text-foreground truncate">{a.name}</div>
+                <div className="text-xs text-muted-foreground truncate">{a.service}</div>
+              </div>
+              <div className="text-sm font-medium text-foreground flex items-center gap-1">
+                <Clock className="w-3 h-3" /> {a.time}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfileSelector() {
+  const profile = useProfile();
+  const Btn = ({ value, icon, label }: { value: Profile; icon: string; label: string }) => {
+    const active = profile === value;
+    return (
+      <button
+        onClick={() => setProfile(value)}
+        className="px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 flex items-center gap-2"
+        style={
+          active
+            ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
+            : { background: "white", color: "var(--foreground)", border: "1px solid var(--border)" }
+        }
+      >
+        <span>{icon}</span> {label}
+      </button>
+    );
+  };
+
+  return (
+    <div className="mb-6 animate-fade-in">
+      <p className="text-sm text-muted-foreground mb-3">Quero ver o sistema como:</p>
+      <div className="inline-flex flex-wrap gap-2 justify-center p-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.6)", backdropFilter: "blur(8px)" }}>
+        <Btn value="owner" icon="👑" label="Dona do Salão" />
+        <Btn value="employee" icon="💅" label="Funcionária" />
+      </div>
+      <p className="text-xs text-muted-foreground mt-3">
+        A dona vê tudo. A funcionária vê apenas a própria agenda e comissões.
+      </p>
     </div>
   );
 }
