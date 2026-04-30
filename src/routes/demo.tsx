@@ -33,7 +33,7 @@ import { useSettings } from "@/lib/demoSettings";
 import { useProfile, setProfile, EMPLOYEE_NAME, type Profile } from "@/lib/demoProfile";
 import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
 import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
-import { Crown, Sparkle } from "lucide-react";
+import { Crown } from "lucide-react";
 import {
   appointmentsStore,
   servicesStore,
