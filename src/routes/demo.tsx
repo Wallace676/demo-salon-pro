@@ -74,6 +74,15 @@ function DemoPage() {
   const [tourActive, setTourActive] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const settings = useSettings();
+  const profile = useProfile();
+  const isEmployee = profile === "employee";
+
+  // Reset tab if current tab isn't allowed for this profile
+  useEffect(() => {
+    if (isEmployee && !["dashboard", "appointments", "commissions"].includes(tab)) {
+      setTab("dashboard");
+    }
+  }, [isEmployee, tab]);
 
   const startDemo = () => {
     setStarted(true);
@@ -86,24 +95,46 @@ function DemoPage() {
 
   if (!started) return <Landing onStart={startDemo} salonName={settings.salonName} />;
 
+  const mobileTabs: Tab[] = isEmployee
+    ? ["dashboard", "appointments", "commissions"]
+    : ["dashboard", "appointments", "clients", "services", "bot", "reports", "settings"];
+
   return (
     <div className="min-h-screen bg-background">
       <DemoBadge />
 
       <div className="flex min-h-screen">
-        <aside className="w-60 border-r border-border bg-card hidden md:flex flex-col">
+        <aside
+          className="w-60 border-r border-border hidden md:flex flex-col transition-colors duration-300"
+          style={
+            isEmployee
+              ? { background: "linear-gradient(180deg, oklch(0.98 0.015 25), var(--card))" }
+              : { background: "var(--card)" }
+          }
+        >
           <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
-            <span className="font-bold truncate">{settings.salonName}</span>
+            <span className="font-bold truncate">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
           </div>
           <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-            <NavItem id="tour-dashboard" active={tab === "dashboard"} onClick={() => setTab("dashboard")} icon={<LayoutDashboard className="w-4 h-4" />}>Dashboard</NavItem>
-            <NavItem id="tour-appointments" active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Agendamentos</NavItem>
-            <NavItem id="tour-clients" active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Clientes</NavItem>
-            <NavItem active={tab === "services"} onClick={() => setTab("services")} icon={<Scissors className="w-4 h-4" />}>Serviços</NavItem>
-            <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
-            <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
-            <NavItem active={tab === "settings"} onClick={() => setTab("settings")} icon={<SettingsIcon className="w-4 h-4" />}>Configurações</NavItem>
+            {isEmployee ? (
+              <>
+                <NavItem active={tab === "dashboard"} onClick={() => setTab("dashboard")} icon={<LayoutDashboard className="w-4 h-4" />}>Início</NavItem>
+                <NavItem active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Minha Agenda</NavItem>
+                <NavItem active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Meus Clientes</NavItem>
+                <NavItem active={tab === "commissions"} onClick={() => setTab("commissions")} icon={<DollarSign className="w-4 h-4" />}>Minhas Comissões</NavItem>
+              </>
+            ) : (
+              <>
+                <NavItem id="tour-dashboard" active={tab === "dashboard"} onClick={() => setTab("dashboard")} icon={<LayoutDashboard className="w-4 h-4" />}>Dashboard</NavItem>
+                <NavItem id="tour-appointments" active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Agendamentos</NavItem>
+                <NavItem id="tour-clients" active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Clientes</NavItem>
+                <NavItem active={tab === "services"} onClick={() => setTab("services")} icon={<Scissors className="w-4 h-4" />}>Serviços</NavItem>
+                <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
+                <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
+                <NavItem active={tab === "settings"} onClick={() => setTab("settings")} icon={<SettingsIcon className="w-4 h-4" />}>Configurações</NavItem>
+              </>
+            )}
           </nav>
           <div className="p-3 border-t border-border">
             <button
@@ -119,7 +150,7 @@ function DemoPage() {
 
         <main className="flex-1 p-6 md:p-8 overflow-x-hidden">
           <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-2">
-            {(["dashboard", "appointments", "clients", "services", "bot", "reports", "settings"] as Tab[]).map((t) => (
+            {mobileTabs.map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -131,13 +162,14 @@ function DemoPage() {
             ))}
           </div>
 
-          {tab === "dashboard" && <Dashboard ownerName={settings.ownerName} />}
-          {tab === "appointments" && <Appointments />}
+          {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} />)}
+          {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
           {tab === "clients" && <Clients />}
-          {tab === "services" && <Services />}
-          {tab === "bot" && <BotPage />}
-          {tab === "reports" && <Reports />}
-          {tab === "settings" && <SettingsPage />}
+          {tab === "services" && !isEmployee && <Services />}
+          {tab === "bot" && !isEmployee && <BotPage />}
+          {tab === "reports" && !isEmployee && <Reports />}
+          {tab === "settings" && !isEmployee && <SettingsPage />}
+          {tab === "commissions" && isEmployee && <EmployeeCommissions />}
 
           <div className="md:hidden mt-6">
             <button
@@ -151,7 +183,7 @@ function DemoPage() {
         </main>
       </div>
 
-      {tourActive && <DemoTour steps={TOUR_STEPS} onFinish={() => setTourActive(false)} />}
+      {tourActive && !isEmployee && <DemoTour steps={TOUR_STEPS} onFinish={() => setTourActive(false)} />}
       {exitOpen && <ExitDemoModal onClose={() => setExitOpen(false)} />}
     </div>
   );
