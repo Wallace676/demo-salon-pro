@@ -458,6 +458,13 @@ function Dashboard({ ownerName }: { ownerName: string }) {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <div
+        className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white"
+        style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+      >
+        <Crown className="w-4 h-4" />
+        <span>👑 Visão da Dona — você vê tudo do salão</span>
+      </div>
       <div>
         <h1 className="text-2xl font-bold text-foreground">Olá, {ownerName}! 👋</h1>
         <p className="text-muted-foreground text-sm">Aqui está o resumo do seu salão hoje.</p>
