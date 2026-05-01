@@ -33,6 +33,8 @@ import { useSettings } from "@/lib/demoSettings";
 import { useProfile, setProfile, EMPLOYEE_NAME, type Profile } from "@/lib/demoProfile";
 import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
 import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
+import { TeamPerformance } from "@/components/demo/TeamPerformance";
+import { BarChart3 } from "lucide-react";
 import { Crown } from "lucide-react";
 import {
   appointmentsStore,
@@ -64,7 +66,7 @@ const TOUR_STEPS: TourStep[] = [
   { targetId: "tour-cta", title: "Pronto?", description: "Pronto para transformar seu salão? 💅" },
 ];
 
-type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions";
+type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance";
 
 const TOUR_KEY = "demo_tour_seen_v2";
 
@@ -97,7 +99,7 @@ function DemoPage() {
 
   const mobileTabs: Tab[] = isEmployee
     ? ["dashboard", "appointments", "commissions"]
-    : ["dashboard", "appointments", "clients", "services", "bot", "reports", "settings"];
+    : ["dashboard", "appointments", "clients", "services", "bot", "performance", "reports", "settings"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -131,6 +133,7 @@ function DemoPage() {
                 <NavItem id="tour-clients" active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Clientes</NavItem>
                 <NavItem active={tab === "services"} onClick={() => setTab("services")} icon={<Scissors className="w-4 h-4" />}>Serviços</NavItem>
                 <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
+                <NavItem active={tab === "performance"} onClick={() => setTab("performance")} icon={<BarChart3 className="w-4 h-4" />}>📊 Desempenho</NavItem>
                 <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
                 <NavItem active={tab === "settings"} onClick={() => setTab("settings")} icon={<SettingsIcon className="w-4 h-4" />}>Configurações</NavItem>
               </>
@@ -169,6 +172,7 @@ function DemoPage() {
           {tab === "bot" && !isEmployee && <BotPage />}
           {tab === "reports" && !isEmployee && <Reports />}
           {tab === "settings" && !isEmployee && <SettingsPage />}
+          {tab === "performance" && !isEmployee && <TeamPerformance />}
           {tab === "commissions" && isEmployee && <EmployeeCommissions />}
 
           <div className="md:hidden mt-6">
