@@ -29,6 +29,16 @@ const CONVERSATIONS: Msg[][] = [
     { from: "client", text: "sim obrigada" },
     { from: "bot", text: "Cancelado! 💛 Quando quiser remarcar é só me chamar aqui.\n\nVai sentir minha falta? 😂" },
   ],
+  [
+    { from: "client", text: "Oi, quero fazer as unhas" },
+    { from: "bot", text: "Oi Ana! Que saudade! 💛\n\nFaz 22 dias desde sua última visita com a Carla 😊\n\nQuer agendar com ela novamente?" },
+    { from: "client", text: "sim" },
+    { from: "bot", text: "Ótimo! A Carla tem horário:\n\n📅 Amanhã às 14h\n📅 Sexta às 10h\n\nQual prefere?" },
+    { from: "client", text: "amanhã" },
+    { from: "bot", text: "Perfeito! Já anotei 💅\n\nVou usar o esmalte rosa nude que você ama, tá bom? 🌸" },
+    { from: "client", text: "sim amei" },
+    { from: "bot", text: "✅ Agendado!\n\n📅 Amanhã às 14h\n💅 Manicure com Carla\n🌸 Esmalte: Rosa nude\n\nTe mando lembrete 1h antes! 😉" },
+  ],
 ];
 
 export function MariSimulation() {

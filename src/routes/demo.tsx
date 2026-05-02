@@ -34,7 +34,10 @@ import { useProfile, setProfile, EMPLOYEE_NAME, type Profile } from "@/lib/demoP
 import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
 import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
 import { TeamPerformance } from "@/components/demo/TeamPerformance";
-import { BarChart3 } from "lucide-react";
+import { TeamPage } from "@/components/demo/TeamPage";
+import { EmployeeNewClientModal } from "@/components/demo/EmployeeNewClientModal";
+import { ClientProfileModal } from "@/components/demo/ClientProfileModal";
+import { BarChart3, Home, UserPlus, Users2 } from "lucide-react";
 import { Crown } from "lucide-react";
 import {
   appointmentsStore,
@@ -66,7 +69,7 @@ const TOUR_STEPS: TourStep[] = [
   { targetId: "tour-cta", title: "Pronto?", description: "Pronto para transformar seu salão? 💅" },
 ];
 
-type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance";
+type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team";
 
 const TOUR_KEY = "demo_tour_seen_v2";
 
@@ -81,10 +84,17 @@ function DemoPage() {
 
   // Reset tab if current tab isn't allowed for this profile
   useEffect(() => {
-    if (isEmployee && !["dashboard", "appointments", "commissions"].includes(tab)) {
+    if (isEmployee && !["dashboard", "appointments", "clients", "commissions"].includes(tab)) {
       setTab("dashboard");
     }
   }, [isEmployee, tab]);
+
+  const goHome = () => {
+    setStarted(false);
+    setTourActive(false);
+    setTab("dashboard");
+    if (typeof window !== "undefined") localStorage.removeItem(TOUR_KEY);
+  };
 
   const startDemo = () => {
     setStarted(true);
@@ -98,8 +108,10 @@ function DemoPage() {
   if (!started) return <Landing onStart={startDemo} salonName={settings.salonName} />;
 
   const mobileTabs: Tab[] = isEmployee
-    ? ["dashboard", "appointments", "commissions"]
-    : ["dashboard", "appointments", "clients", "services", "bot", "performance", "reports", "settings"];
+    ? ["dashboard", "appointments", "clients", "commissions"]
+    : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "reports", "settings"];
+
+  const [empNewClientOpen, setEmpNewClientOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -116,7 +128,20 @@ function DemoPage() {
         >
           <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
-            <span className="font-bold truncate">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
+            <span className="font-bold truncate flex-1">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
+          </div>
+          <div className="px-3 pt-3">
+            <button
+              onClick={goHome}
+              className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all hover:scale-[1.02]"
+              style={{
+                background: "transparent",
+                border: "1.5px solid var(--rose-gold)",
+                color: "var(--rose-gold-dark)",
+              }}
+            >
+              <Home className="w-3.5 h-3.5" /> ← Voltar ao início
+            </button>
           </div>
           <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {isEmployee ? (
@@ -125,6 +150,13 @@ function DemoPage() {
                 <NavItem active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Minha Agenda</NavItem>
                 <NavItem active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Meus Clientes</NavItem>
                 <NavItem active={tab === "commissions"} onClick={() => setTab("commissions")} icon={<DollarSign className="w-4 h-4" />}>Minhas Comissões</NavItem>
+                <button
+                  onClick={() => setEmpNewClientOpen(true)}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold text-white transition-transform hover:scale-[1.02] mt-2"
+                  style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+                >
+                  <UserPlus className="w-4 h-4" /> ➕ Nova Cliente
+                </button>
               </>
             ) : (
               <>
@@ -133,6 +165,7 @@ function DemoPage() {
                 <NavItem id="tour-clients" active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Clientes</NavItem>
                 <NavItem active={tab === "services"} onClick={() => setTab("services")} icon={<Scissors className="w-4 h-4" />}>Serviços</NavItem>
                 <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
+                <NavItem active={tab === "team"} onClick={() => setTab("team")} icon={<Users2 className="w-4 h-4" />}>Equipe</NavItem>
                 <NavItem active={tab === "performance"} onClick={() => setTab("performance")} icon={<BarChart3 className="w-4 h-4" />}>📊 Desempenho</NavItem>
                 <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
                 <NavItem active={tab === "settings"} onClick={() => setTab("settings")} icon={<SettingsIcon className="w-4 h-4" />}>Configurações</NavItem>
@@ -152,6 +185,19 @@ function DemoPage() {
         </aside>
 
         <main className="flex-1 p-6 md:p-8 overflow-x-hidden">
+          <div className="flex items-center gap-2 mb-4 md:hidden">
+            <button
+              onClick={goHome}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
+              style={{
+                background: "transparent",
+                border: "1.5px solid var(--rose-gold)",
+                color: "var(--rose-gold-dark)",
+              }}
+            >
+              <Home className="w-3.5 h-3.5" /> ← Início
+            </button>
+          </div>
           <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-2">
             {mobileTabs.map((t) => (
               <button
@@ -172,8 +218,20 @@ function DemoPage() {
           {tab === "bot" && !isEmployee && <BotPage />}
           {tab === "reports" && !isEmployee && <Reports />}
           {tab === "settings" && !isEmployee && <SettingsPage />}
+          {tab === "team" && !isEmployee && <TeamPage />}
           {tab === "performance" && !isEmployee && <TeamPerformance />}
           {tab === "commissions" && isEmployee && <EmployeeCommissions />}
+
+          {isEmployee && (
+            <button
+              onClick={() => setEmpNewClientOpen(true)}
+              className="md:hidden fixed bottom-20 right-4 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full text-white font-semibold shadow-lg"
+              style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+              aria-label="Nova Cliente"
+            >
+              <UserPlus className="w-5 h-5" />
+            </button>
+          )}
 
           <div className="md:hidden mt-6">
             <button
@@ -189,6 +247,7 @@ function DemoPage() {
 
       {tourActive && !isEmployee && <DemoTour steps={TOUR_STEPS} onFinish={() => setTourActive(false)} />}
       {exitOpen && <ExitDemoModal onClose={() => setExitOpen(false)} />}
+      {empNewClientOpen && <EmployeeNewClientModal onClose={() => setEmpNewClientOpen(false)} />}
     </div>
   );
 }
@@ -700,12 +759,18 @@ function Td({ children, className = "" }: { children: React.ReactNode; className
 }
 
 function Clients() {
+  const [openClient, setOpenClient] = useState<string | null>(null);
   return (
     <div className="space-y-4 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
+      <p className="text-sm text-muted-foreground">Clique em uma cliente para ver o histórico inteligente.</p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {DEMO_CLIENTS.map((c) => (
-          <div key={c.id} className="bg-card rounded-xl p-4 border border-border flex gap-3 items-center">
+          <button
+            key={c.id}
+            onClick={() => setOpenClient(c.name)}
+            className="bg-card rounded-xl p-4 border border-border flex gap-3 items-center text-left hover:shadow-md hover:-translate-y-0.5 transition-all"
+          >
             <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style={{ background: "var(--gradient-rose-gold)" }}>
               {c.name.charAt(0)}
             </div>
@@ -716,9 +781,10 @@ function Clients() {
                 {c.visits} visitas • {c.lastVisit}
               </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
+      {openClient && <ClientProfileModal clientName={openClient} onClose={() => setOpenClient(null)} />}
     </div>
   );
 }
