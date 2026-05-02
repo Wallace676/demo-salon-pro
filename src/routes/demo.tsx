@@ -69,7 +69,7 @@ const TOUR_STEPS: TourStep[] = [
   { targetId: "tour-cta", title: "Pronto?", description: "Pronto para transformar seu salão? 💅" },
 ];
 
-type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance";
+type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team";
 
 const TOUR_KEY = "demo_tour_seen_v2";
 
@@ -84,10 +84,17 @@ function DemoPage() {
 
   // Reset tab if current tab isn't allowed for this profile
   useEffect(() => {
-    if (isEmployee && !["dashboard", "appointments", "commissions"].includes(tab)) {
+    if (isEmployee && !["dashboard", "appointments", "clients", "commissions"].includes(tab)) {
       setTab("dashboard");
     }
   }, [isEmployee, tab]);
+
+  const goHome = () => {
+    setStarted(false);
+    setTourActive(false);
+    setTab("dashboard");
+    if (typeof window !== "undefined") localStorage.removeItem(TOUR_KEY);
+  };
 
   const startDemo = () => {
     setStarted(true);
