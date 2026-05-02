@@ -759,12 +759,18 @@ function Td({ children, className = "" }: { children: React.ReactNode; className
 }
 
 function Clients() {
+  const [openClient, setOpenClient] = useState<string | null>(null);
   return (
     <div className="space-y-4 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
+      <p className="text-sm text-muted-foreground">Clique em uma cliente para ver o histórico inteligente.</p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {DEMO_CLIENTS.map((c) => (
-          <div key={c.id} className="bg-card rounded-xl p-4 border border-border flex gap-3 items-center">
+          <button
+            key={c.id}
+            onClick={() => setOpenClient(c.name)}
+            className="bg-card rounded-xl p-4 border border-border flex gap-3 items-center text-left hover:shadow-md hover:-translate-y-0.5 transition-all"
+          >
             <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style={{ background: "var(--gradient-rose-gold)" }}>
               {c.name.charAt(0)}
             </div>
@@ -775,9 +781,10 @@ function Clients() {
                 {c.visits} visitas • {c.lastVisit}
               </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
+      {openClient && <ClientProfileModal clientName={openClient} onClose={() => setOpenClient(null)} />}
     </div>
   );
 }
