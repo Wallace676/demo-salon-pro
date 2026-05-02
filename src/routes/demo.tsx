@@ -34,7 +34,10 @@ import { useProfile, setProfile, EMPLOYEE_NAME, type Profile } from "@/lib/demoP
 import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
 import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
 import { TeamPerformance } from "@/components/demo/TeamPerformance";
-import { BarChart3 } from "lucide-react";
+import { TeamPage } from "@/components/demo/TeamPage";
+import { EmployeeNewClientModal } from "@/components/demo/EmployeeNewClientModal";
+import { ClientProfileModal } from "@/components/demo/ClientProfileModal";
+import { BarChart3, Home, UserPlus, Users2 } from "lucide-react";
 import { Crown } from "lucide-react";
 import {
   appointmentsStore,
