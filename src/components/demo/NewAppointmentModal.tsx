@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { X } from "lucide-react";
 import { addAppointment, servicesStore } from "@/lib/demoStore";
+import { eligibleProfessionals, teamColor } from "@/lib/demoProfessionals";
 import { toast } from "sonner";
 
 function maskPhone(v: string) {
