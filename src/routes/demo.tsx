@@ -48,6 +48,21 @@ import {
   type AppointmentStatus,
 } from "@/lib/demoStore";
 import { toast } from "sonner";
+import { professionalForAppointment, teamColor } from "@/lib/demoProfessionals";
+
+function ProfessionalChip({ name }: { name: string }) {
+  return (
+    <div className="inline-flex items-center gap-1.5">
+      <div
+        className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
+        style={{ background: teamColor(name) }}
+      >
+        {name.charAt(0)}
+      </div>
+      <span className="text-sm">{name}</span>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/demo")({
   head: () => ({
@@ -649,22 +664,26 @@ function Appointments({ isEmployee = false }: { isEmployee?: boolean }) {
         <table className="w-full text-sm">
           <thead style={{ background: "var(--accent)" }}>
             <tr className="text-left">
-              <Th>Cliente</Th><Th>Serviço</Th><Th>Data</Th><Th>Horário</Th><Th>Status</Th><Th>Valor</Th>
+              <Th>Cliente</Th><Th>Serviço</Th><Th>Profissional</Th><Th>Data</Th><Th>Horário</Th><Th>Status</Th><Th>Valor</Th>
             </tr>
           </thead>
           <tbody>
-            {appts.map((a) => (
-              <tr key={a.id} className="border-t border-border">
-                <Td>{a.clientName}</Td>
-                <Td>{a.service}</Td>
-                <Td>{new Date(a.date + "T00:00:00").toLocaleDateString("pt-BR")}</Td>
-                <Td>{a.time}</Td>
-                <Td><StatusBadge status={a.status} /></Td>
-                <Td className="font-medium">R$ {a.price}</Td>
-              </tr>
-            ))}
+            {appts.map((a) => {
+              const prof = professionalForAppointment(a.id, a.service);
+              return (
+                <tr key={a.id} className="border-t border-border">
+                  <Td>{a.clientName}</Td>
+                  <Td>{a.service}</Td>
+                  <Td><ProfessionalChip name={prof} /></Td>
+                  <Td>{new Date(a.date + "T00:00:00").toLocaleDateString("pt-BR")}</Td>
+                  <Td>{a.time}</Td>
+                  <Td><StatusBadge status={a.status} /></Td>
+                  <Td className="font-medium">R$ {a.price}</Td>
+                </tr>
+              );
+            })}
             {appts.length === 0 && (
-              <tr><td colSpan={6} className="text-center py-10 text-muted-foreground">Nenhum agendamento ainda.</td></tr>
+              <tr><td colSpan={7} className="text-center py-10 text-muted-foreground">Nenhum agendamento ainda.</td></tr>
             )}
           </tbody>
         </table>
