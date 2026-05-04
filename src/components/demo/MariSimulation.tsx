@@ -99,6 +99,11 @@ export function MariSimulation() {
           </div>
         </div>
       </div>
+      {convIdx === 3 && (
+        <div className="px-3 py-2 text-[11px] font-medium text-center" style={{ background: "oklch(0.97 0.025 25)", color: "var(--rose-gold-dark)" }}>
+          🔄 Cliente recorrente — bot reconhece e sugere profissional preferida
+        </div>
+      )}
       <div
         ref={scrollRef}
         className="h-[420px] overflow-y-auto px-3 py-4 space-y-2"
