@@ -27,10 +27,12 @@ export function NewAppointmentModal({ onClose }: { onClose: () => void }) {
     clientName: "",
     phone: "",
     service: services[0]?.name || "",
+    professional: "",
     date: new Date().toISOString().slice(0, 10),
     time: "09:00",
     notes: "",
   });
+  const profOptions = useMemo(() => eligibleProfessionals(form.service), [form.service]);
   const [err, setErr] = useState("");
 
   const submit = (e: React.FormEvent) => {
