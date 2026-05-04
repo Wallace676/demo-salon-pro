@@ -48,6 +48,21 @@ import {
   type AppointmentStatus,
 } from "@/lib/demoStore";
 import { toast } from "sonner";
+import { professionalForAppointment, teamColor } from "@/lib/demoProfessionals";
+
+function ProfessionalChip({ name }: { name: string }) {
+  return (
+    <div className="inline-flex items-center gap-1.5">
+      <div
+        className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
+        style={{ background: teamColor(name) }}
+      >
+        {name.charAt(0)}
+      </div>
+      <span className="text-sm">{name}</span>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/demo")({
   head: () => ({
