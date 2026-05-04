@@ -70,13 +70,32 @@ export function NewAppointmentModal({ onClose }: { onClose: () => void }) {
             <label className="text-sm font-medium text-foreground">Serviço</label>
             <select
               value={form.service}
-              onChange={(e) => setForm({ ...form, service: e.target.value })}
+              onChange={(e) => setForm({ ...form, service: e.target.value, professional: "" })}
               className="w-full mt-1 px-3 py-2 rounded-lg border border-input bg-background"
             >
               {services.map((s) => (
                 <option key={s.id} value={s.name}>{s.name} — R$ {s.price}</option>
               ))}
             </select>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground">Profissional</label>
+            <select
+              value={form.professional}
+              onChange={(e) => setForm({ ...form, professional: e.target.value })}
+              className="w-full mt-1 px-3 py-2 rounded-lg border border-input bg-background"
+            >
+              <option value="">Qualquer profissional disponível</option>
+              {profOptions.map((p) => (
+                <option key={p.id} value={p.name}>{p.name}</option>
+              ))}
+            </select>
+            {form.professional && (
+              <div className="mt-2 inline-flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="w-5 h-5 rounded-full inline-flex items-center justify-center text-white text-[10px] font-bold" style={{ background: teamColor(form.professional) }}>{form.professional.charAt(0)}</span>
+                Atendimento com {form.professional}
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
