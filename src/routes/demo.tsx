@@ -81,6 +81,7 @@ function DemoPage() {
   const settings = useSettings();
   const profile = useProfile();
   const isEmployee = profile === "employee";
+  const [empNewClientOpen, setEmpNewClientOpen] = useState(false);
 
   // Reset tab if current tab isn't allowed for this profile
   useEffect(() => {
@@ -111,7 +112,6 @@ function DemoPage() {
     ? ["dashboard", "appointments", "clients", "commissions"]
     : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "reports", "settings"];
 
-  const [empNewClientOpen, setEmpNewClientOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
