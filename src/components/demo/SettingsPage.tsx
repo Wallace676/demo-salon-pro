@@ -53,7 +53,7 @@ export function SettingsPage() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium text-foreground">Nome do responsável</label>
+            <label className="text-sm font-medium text-foreground">Nome da proprietária</label>
             <input
               value={settings.ownerName}
               onChange={(e) => updateSettings({ ownerName: e.target.value })}
