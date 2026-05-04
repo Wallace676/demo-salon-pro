@@ -112,7 +112,6 @@ function DemoPage() {
     ? ["dashboard", "appointments", "clients", "commissions"]
     : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "reports", "settings"];
 
-  const [empNewClientOpen, setEmpNewClientOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
