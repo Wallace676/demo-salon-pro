@@ -144,13 +144,14 @@ function DemoPage() {
           className="w-60 border-r border-border hidden md:flex flex-col transition-colors duration-300"
           style={
             isEmployee
-              ? { background: "linear-gradient(180deg, oklch(0.98 0.015 25), var(--card))" }
+              ? { background: "linear-gradient(180deg, color-mix(in oklab, var(--rose-gold) 12%, var(--card)), var(--card))" }
               : { background: "var(--card)" }
           }
         >
           <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
             <span className="font-bold truncate flex-1">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
+            {isEmployee && <EmployeeThemePicker />}
           </div>
           <div className="px-3 pt-3">
             <button
