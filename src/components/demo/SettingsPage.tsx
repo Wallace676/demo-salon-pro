@@ -80,42 +80,23 @@ export function SettingsPage() {
       </Section>
 
       {/* Theme */}
-      <Section title="🎨 Tema do Sistema">
-        <p className="text-sm text-muted-foreground -mt-2 mb-4">Escolha as cores do seu salão.</p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
-          {THEME_OPTIONS.map((t) => {
-            const selected = settings.theme === t.value;
-            return (
-              <button
-                key={t.value}
-                onClick={() => { updateSettings({ theme: t.value as ThemeName }); toast.success("Tema aplicado! ✨"); }}
-                className="flex flex-col items-center gap-2 group transition-transform"
-                style={{ transform: selected ? "scale(1.05)" : undefined }}
-              >
-                <div
-                  className="relative rounded-full transition-all"
-                  style={{
-                    width: selected ? 84 : 72,
-                    height: selected ? 84 : 72,
-                    background: t.preview,
-                    border: `4px solid ${t.ring}`,
-                    boxShadow: selected ? `0 0 30px ${t.ring}80` : undefined,
-                  }}
-                >
-                  {selected && (
-                    <div
-                      className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center text-xs"
-                      style={{ background: t.ring, color: t.preview }}
-                    >
-                      <Check className="w-4 h-4" />
-                    </div>
-                  )}
+      <Section title="Tema de cores">
+        <div className="grid grid-cols-3 gap-3">
+          {THEME_OPTIONS.map((t) => (
+            <button
+              key={t.value}
+              onClick={() => { updateSettings({ theme: t.value as ThemeName }); toast.success(`Tema ${t.label} aplicado!`); }}
+              className="relative rounded-xl p-4 text-white font-semibold text-sm transition-transform hover:scale-105"
+              style={{ background: t.preview }}
+            >
+              {settings.theme === t.value && (
+                <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-white/30 flex items-center justify-center">
+                  <Check className="w-3 h-3" />
                 </div>
-                <span className="text-sm font-semibold text-foreground">{t.label}</span>
-                {t.value === "roxo" && <span className="text-[10px] text-muted-foreground">⭐ Padrão</span>}
-              </button>
-            );
-          })}
+              )}
+              {t.label}
+            </button>
+          ))}
         </div>
       </Section>
 
