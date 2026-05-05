@@ -97,7 +97,13 @@ function DemoPage() {
   const settings = useSettings();
   const profile = useProfile();
   const isEmployee = profile === "employee";
+  const employeeTheme = useEmployeeTheme();
   const [empNewClientOpen, setEmpNewClientOpen] = useState(false);
+
+  // Apply theme based on current view
+  useEffect(() => {
+    applyTheme(isEmployee ? employeeTheme : settings.theme);
+  }, [isEmployee, employeeTheme, settings.theme]);
 
   // Reset tab if current tab isn't allowed for this profile
   useEffect(() => {
