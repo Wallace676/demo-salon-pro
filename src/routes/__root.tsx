@@ -1,5 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { applyTheme, getSettings } from "@/lib/demoSettings";
 
 import appCss from "../styles.css?url";
 
@@ -70,6 +72,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  useEffect(() => {
+    applyTheme(getSettings().theme);
+  }, []);
   return (
     <>
       <Outlet />

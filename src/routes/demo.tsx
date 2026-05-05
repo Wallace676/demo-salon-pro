@@ -29,7 +29,8 @@ import { ServiceFormModal } from "@/components/demo/ServiceFormModal";
 import { SettingsPage } from "@/components/demo/SettingsPage";
 import { Confetti } from "@/components/demo/Confetti";
 import { DEMO_CLIENTS, DEMO_STATS } from "@/lib/demoData";
-import { useSettings } from "@/lib/demoSettings";
+import { useSettings, useEmployeeTheme, applyTheme } from "@/lib/demoSettings";
+import { EmployeeThemePicker } from "@/components/demo/EmployeeThemePicker";
 import { useProfile, setProfile, EMPLOYEE_NAME, type Profile } from "@/lib/demoProfile";
 import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
 import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
@@ -96,7 +97,13 @@ function DemoPage() {
   const settings = useSettings();
   const profile = useProfile();
   const isEmployee = profile === "employee";
+  const employeeTheme = useEmployeeTheme();
   const [empNewClientOpen, setEmpNewClientOpen] = useState(false);
+
+  // Apply theme based on current view
+  useEffect(() => {
+    applyTheme(isEmployee ? employeeTheme : settings.theme);
+  }, [isEmployee, employeeTheme, settings.theme]);
 
   // Reset tab if current tab isn't allowed for this profile
   useEffect(() => {
@@ -137,13 +144,14 @@ function DemoPage() {
           className="w-60 border-r border-border hidden md:flex flex-col transition-colors duration-300"
           style={
             isEmployee
-              ? { background: "linear-gradient(180deg, oklch(0.98 0.015 25), var(--card))" }
+              ? { background: "linear-gradient(180deg, color-mix(in oklab, var(--rose-gold) 12%, var(--card)), var(--card))" }
               : { background: "var(--card)" }
           }
         >
           <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
             <span className="font-bold truncate flex-1">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
+            {isEmployee && <EmployeeThemePicker />}
           </div>
           <div className="px-3 pt-3">
             <button
@@ -315,7 +323,7 @@ function Landing({ onStart, salonName }: { onStart: () => void; salonName: strin
     <div className="min-h-screen" style={{ background: "var(--gradient-rose-soft)" }}>
       <div className="px-4 py-10">
         <div className="max-w-5xl mx-auto text-center animate-slide-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-6" style={{ background: "white", color: "var(--rose-gold-dark)", boxShadow: "var(--shadow-rose)" }}>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-6" style={{ background: "var(--card)", color: "var(--rose-gold)", boxShadow: "var(--shadow-rose)" }}>
             <Sparkles className="w-3 h-3" /> Demonstração interativa gratuita
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground tracking-tight mb-4">
@@ -368,7 +376,7 @@ function Landing({ onStart, salonName }: { onStart: () => void; salonName: strin
 
 function PricingSection({ onChoose }: { onChoose: (plan: string) => void }) {
   return (
-    <section className="relative px-4 py-20 mt-16" style={{ background: "#0A0A0A" }}>
+    <section className="relative px-4 py-20 mt-16" style={{ background: "var(--background)" }}>
       {/* Top divider */}
       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "var(--gradient-rose-gold)", opacity: 0.7 }} />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 -translate-y-1/2 rounded-full blur-3xl opacity-30" style={{ background: "var(--gradient-rose-gold)" }} />
@@ -485,7 +493,7 @@ function PricingCard({
         style={
           highlighted
             ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
-            : { background: "rgba(255,255,255,0.1)", color: "var(--rose-gold-light)", border: "1px solid rgba(255,255,255,0.15)" }
+            : { background: "color-mix(in oklab, var(--rose-gold) 18%, transparent)", color: "var(--rose-gold-light)", border: "1px solid var(--border)" }
         }
       >
         {badge}
@@ -519,7 +527,7 @@ function PricingCard({
         style={
           ctaVariant === "solid"
             ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
-            : { background: "#141414", color: "white", border: "1.5px solid var(--rose-gold)" }
+            : { background: "var(--card)", color: "var(--foreground)", border: "1.5px solid var(--rose-gold)" }
         }
       >
         {ctaLabel}
@@ -640,7 +648,7 @@ function Appointments({ isEmployee = false }: { isEmployee?: boolean }) {
         <div
           className="rounded-lg px-4 py-2.5 text-sm font-medium border"
           style={{
-            background: "oklch(0.97 0.025 25)",
+            background: "color-mix(in oklab, var(--rose-gold) 14%, var(--card))",
             borderColor: "var(--rose-gold)",
             color: "var(--rose-gold-dark)",
           }}
@@ -748,7 +756,7 @@ function ProfileSelector() {
         style={
           active
             ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
-            : { background: "white", color: "var(--foreground)", border: "1px solid var(--border)" }
+            : { background: "var(--card)", color: "var(--foreground)", border: "1px solid var(--border)" }
         }
       >
         <span>{icon}</span> {label}
@@ -759,7 +767,7 @@ function ProfileSelector() {
   return (
     <div className="mb-6 animate-fade-in">
       <p className="text-sm text-muted-foreground mb-3">Quero ver o sistema como:</p>
-      <div className="inline-flex flex-wrap gap-2 justify-center p-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.6)", backdropFilter: "blur(8px)" }}>
+      <div className="inline-flex flex-wrap gap-2 justify-center p-1.5 rounded-full" style={{ background: "color-mix(in oklab, var(--card) 70%, transparent)", backdropFilter: "blur(8px)" }}>
         <Btn value="owner" icon="👑" label="Dona do Salão" />
         <Btn value="employee" icon="💅" label="Funcionária" />
       </div>
