@@ -35,9 +35,13 @@ import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
 import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
 import { TeamPerformance } from "@/components/demo/TeamPerformance";
 import { TeamPage } from "@/components/demo/TeamPage";
+import { TeamSchedule } from "@/components/demo/TeamSchedule";
 import { EmployeeNewClientModal } from "@/components/demo/EmployeeNewClientModal";
 import { ClientProfileModal } from "@/components/demo/ClientProfileModal";
-import { BarChart3, Home, UserPlus, Users2 } from "lucide-react";
+import { InactiveClientsSection } from "@/components/demo/InactiveClientsSection";
+import { NotificationBell } from "@/components/demo/NotificationBell";
+import { INACTIVE_CLIENTS } from "@/lib/inactiveClients";
+import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar } from "lucide-react";
 import { Crown } from "lucide-react";
 import {
   appointmentsStore,
@@ -84,7 +88,7 @@ const TOUR_STEPS: TourStep[] = [
   { targetId: "tour-cta", title: "Pronto?", description: "Pronto para transformar seu salão? 💅" },
 ];
 
-type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team";
+type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team" | "teamSchedule";
 
 const TOUR_KEY = "demo_tour_seen_v2";
 
@@ -100,7 +104,7 @@ function DemoPage() {
 
   // Reset tab if current tab isn't allowed for this profile
   useEffect(() => {
-    if (isEmployee && !["dashboard", "appointments", "clients", "commissions"].includes(tab)) {
+    if (isEmployee && !["dashboard", "appointments", "clients", "commissions", "teamSchedule"].includes(tab)) {
       setTab("dashboard");
     }
   }, [isEmployee, tab]);
@@ -124,7 +128,7 @@ function DemoPage() {
   if (!started) return <Landing onStart={startDemo} salonName={settings.salonName} />;
 
   const mobileTabs: Tab[] = isEmployee
-    ? ["dashboard", "appointments", "clients", "commissions"]
+    ? ["dashboard", "appointments", "clients", "teamSchedule", "commissions"]
     : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "reports", "settings"];
 
 
@@ -144,6 +148,7 @@ function DemoPage() {
           <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
             <span className="font-bold truncate flex-1">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
+            {isEmployee && <NotificationBell />}
           </div>
           <div className="px-3 pt-3">
             <button
@@ -163,6 +168,7 @@ function DemoPage() {
               <>
                 <NavItem active={tab === "dashboard"} onClick={() => setTab("dashboard")} icon={<LayoutDashboard className="w-4 h-4" />}>Início</NavItem>
                 <NavItem active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Minha Agenda</NavItem>
+                <NavItem active={tab === "teamSchedule"} onClick={() => setTab("teamSchedule")} icon={<CalendarDays className="w-4 h-4" />}>👥 Agenda da Equipe</NavItem>
                 <NavItem active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Meus Clientes</NavItem>
                 <NavItem active={tab === "commissions"} onClick={() => setTab("commissions")} icon={<DollarSign className="w-4 h-4" />}>Minhas Comissões</NavItem>
                 <button
@@ -226,9 +232,9 @@ function DemoPage() {
             ))}
           </div>
 
-          {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} />)}
+          {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} onSeeInactive={() => setTab("clients")} />)}
           {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
-          {tab === "clients" && <Clients />}
+          {tab === "clients" && <Clients isEmployee={isEmployee} />}
           {tab === "services" && !isEmployee && <Services />}
           {tab === "bot" && !isEmployee && <BotPage />}
           {tab === "reports" && !isEmployee && <Reports />}
@@ -236,6 +242,7 @@ function DemoPage() {
           {tab === "team" && !isEmployee && <TeamPage />}
           {tab === "performance" && !isEmployee && <TeamPerformance />}
           {tab === "commissions" && isEmployee && <EmployeeCommissions />}
+          {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
 
           {isEmployee && (
             <button
@@ -529,10 +536,12 @@ function PricingCard({
 }
 
 
-function Dashboard({ ownerName }: { ownerName: string }) {
+function Dashboard({ ownerName, onSeeInactive }: { ownerName: string; onSeeInactive?: () => void }) {
   const appts = appointmentsStore.use();
   const todayKey = new Date().toISOString().slice(0, 10);
   const todayAppts = appts.filter((a) => a.date === todayKey);
+  const inactiveCount = INACTIVE_CLIENTS.length;
+  const inactivePreview = INACTIVE_CLIENTS.slice(0, 2).map((c) => c.name.split(" ")[0]).join(", ");
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -554,6 +563,24 @@ function Dashboard({ ownerName }: { ownerName: string }) {
         <StatCard icon={<DollarSign />} label="Faturamento do mês" value={`R$ ${DEMO_STATS.monthlyRevenue.toLocaleString("pt-BR")}`} />
         <StatCard icon={<TrendingUp />} label="Taxa de retorno" value={`${DEMO_STATS.returnRate}%`} />
       </div>
+
+      <button
+        onClick={onSeeInactive}
+        className="w-full text-left rounded-xl p-4 border flex items-center gap-4 transition-all hover:shadow-md"
+        style={{
+          borderColor: "oklch(0.80 0.15 35)",
+          background: "linear-gradient(135deg, oklch(0.97 0.06 40), oklch(0.96 0.08 25))",
+        }}
+      >
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ background: "white" }}>
+          <MoonStar className="w-5 h-5" style={{ color: "oklch(0.50 0.18 35)" }} />
+        </div>
+        <div className="flex-1">
+          <div className="font-semibold text-foreground">😴 {inactiveCount} clientes sumidas este mês</div>
+          <div className="text-xs text-muted-foreground">{inactivePreview} e mais {Math.max(0, inactiveCount - 2)}...</div>
+        </div>
+        <span className="text-sm font-semibold" style={{ color: "oklch(0.50 0.18 35)" }}>Ver todas →</span>
+      </button>
 
       <div className="grid lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-card rounded-xl p-5 border border-border">
@@ -777,14 +804,46 @@ function Td({ children, className = "" }: { children: React.ReactNode; className
   return <td className={`px-4 py-3 text-foreground ${className}`}>{children}</td>;
 }
 
-function Clients() {
+type ClientFilter = "todas" | "ativas" | "sumidas" | "novas";
+
+function Clients({ isEmployee = false }: { isEmployee?: boolean }) {
   const [openClient, setOpenClient] = useState<string | null>(null);
+  const [filter, setFilter] = useState<ClientFilter>("todas");
+
+  const inactiveNames = useMemo(() => new Set(INACTIVE_CLIENTS.map((c) => c.name)), []);
+  const filtered = useMemo(() => {
+    if (filter === "ativas") return DEMO_CLIENTS.filter((c) => !inactiveNames.has(c.name));
+    if (filter === "sumidas") return DEMO_CLIENTS.filter((c) => inactiveNames.has(c.name));
+    if (filter === "novas") return DEMO_CLIENTS.filter((c) => c.visits <= 6);
+    return DEMO_CLIENTS;
+  }, [filter, inactiveNames]);
+
   return (
     <div className="space-y-4 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
       <p className="text-sm text-muted-foreground">Clique em uma cliente para ver o histórico inteligente.</p>
+
+      {!isEmployee && (
+        <div className="flex flex-wrap gap-2">
+          {(["todas", "ativas", "sumidas", "novas"] as ClientFilter[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className="px-3 py-1.5 rounded-full text-xs font-semibold capitalize transition-all"
+              style={
+                filter === f
+                  ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
+                  : { background: "var(--secondary)", color: "var(--foreground)" }
+              }
+            >
+              {f === "sumidas" ? "😴 Sumidas" : f}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {DEMO_CLIENTS.map((c) => (
+        {filtered.map((c) => (
           <button
             key={c.id}
             onClick={() => setOpenClient(c.name)}
@@ -802,7 +861,13 @@ function Clients() {
             </div>
           </button>
         ))}
+        {filtered.length === 0 && (
+          <div className="col-span-full text-center text-sm text-muted-foreground py-8">Nenhum cliente encontrado.</div>
+        )}
       </div>
+
+      {!isEmployee && (filter === "todas" || filter === "sumidas") && <InactiveClientsSection />}
+
       {openClient && <ClientProfileModal clientName={openClient} onClose={() => setOpenClient(null)} />}
     </div>
   );

@@ -43,6 +43,14 @@ const CONVERSATIONS: Msg[][] = [
     { from: "client", text: "sim" },
     { from: "bot", text: "Agendado com sucesso! 🎉\n\nTe mando um lembrete 1 hora antes, tá bom?\n\nQualquer coisa é só me chamar 💛" },
   ],
+  [
+    { from: "client", text: "oi posso fazer mani amanhã?" },
+    { from: "bot", text: "Oi! 💅 Claro! Vou checar a agenda real de cada profissional...\n\nA Carla tem horário às:\n📅 14h25 (após manicure terminar)\n📅 16h00\n\nQual prefere?" },
+    { from: "client", text: "14h25" },
+    { from: "bot", text: "Perfeito! ✅ Carla faz sua manicure em 25min.\n\n📅 Amanhã às 14h25\n💅 Manicure com Carla — R$45\n\nConfirma?" },
+    { from: "client", text: "sim" },
+    { from: "bot", text: "Agendado! 🎉 Te mando lembrete 1h antes 💛" },
+  ],
 ];
 
 export function MariSimulation() {
@@ -102,6 +110,11 @@ export function MariSimulation() {
       {convIdx === 3 && (
         <div className="px-3 py-2 text-[11px] font-medium text-center" style={{ background: "oklch(0.97 0.025 25)", color: "var(--rose-gold-dark)" }}>
           🔄 Cliente recorrente — bot reconhece e sugere profissional preferida
+        </div>
+      )}
+      {convIdx === 4 && (
+        <div className="px-3 py-2 text-[11px] font-medium text-center" style={{ background: "oklch(0.97 0.025 25)", color: "var(--rose-gold-dark)" }}>
+          ⏱️ Bot calcula horários reais por duração de cada profissional
         </div>
       )}
       <div
