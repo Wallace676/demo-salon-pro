@@ -35,9 +35,13 @@ import { EmployeeNotification } from "@/components/demo/EmployeeNotification";
 import { EmployeeCommissions } from "@/components/demo/EmployeeCommissions";
 import { TeamPerformance } from "@/components/demo/TeamPerformance";
 import { TeamPage } from "@/components/demo/TeamPage";
+import { TeamSchedule } from "@/components/demo/TeamSchedule";
 import { EmployeeNewClientModal } from "@/components/demo/EmployeeNewClientModal";
 import { ClientProfileModal } from "@/components/demo/ClientProfileModal";
-import { BarChart3, Home, UserPlus, Users2 } from "lucide-react";
+import { InactiveClientsSection } from "@/components/demo/InactiveClientsSection";
+import { NotificationBell } from "@/components/demo/NotificationBell";
+import { INACTIVE_CLIENTS } from "@/lib/inactiveClients";
+import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar } from "lucide-react";
 import { Crown } from "lucide-react";
 import {
   appointmentsStore,
