@@ -148,6 +148,7 @@ function DemoPage() {
           <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
             <span className="font-bold truncate flex-1">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
+            {isEmployee && <NotificationBell />}
           </div>
           <div className="px-3 pt-3">
             <button
@@ -167,6 +168,7 @@ function DemoPage() {
               <>
                 <NavItem active={tab === "dashboard"} onClick={() => setTab("dashboard")} icon={<LayoutDashboard className="w-4 h-4" />}>Início</NavItem>
                 <NavItem active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<Calendar className="w-4 h-4" />}>Minha Agenda</NavItem>
+                <NavItem active={tab === "teamSchedule"} onClick={() => setTab("teamSchedule")} icon={<CalendarDays className="w-4 h-4" />}>👥 Agenda da Equipe</NavItem>
                 <NavItem active={tab === "clients"} onClick={() => setTab("clients")} icon={<Users className="w-4 h-4" />}>Meus Clientes</NavItem>
                 <NavItem active={tab === "commissions"} onClick={() => setTab("commissions")} icon={<DollarSign className="w-4 h-4" />}>Minhas Comissões</NavItem>
                 <button
