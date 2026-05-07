@@ -88,7 +88,7 @@ const TOUR_STEPS: TourStep[] = [
   { targetId: "tour-cta", title: "Pronto?", description: "Pronto para transformar seu salão? 💅" },
 ];
 
-type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team";
+type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team" | "teamSchedule";
 
 const TOUR_KEY = "demo_tour_seen_v2";
 
@@ -104,7 +104,7 @@ function DemoPage() {
 
   // Reset tab if current tab isn't allowed for this profile
   useEffect(() => {
-    if (isEmployee && !["dashboard", "appointments", "clients", "commissions"].includes(tab)) {
+    if (isEmployee && !["dashboard", "appointments", "clients", "commissions", "teamSchedule"].includes(tab)) {
       setTab("dashboard");
     }
   }, [isEmployee, tab]);
@@ -128,7 +128,7 @@ function DemoPage() {
   if (!started) return <Landing onStart={startDemo} salonName={settings.salonName} />;
 
   const mobileTabs: Tab[] = isEmployee
-    ? ["dashboard", "appointments", "clients", "commissions"]
+    ? ["dashboard", "appointments", "clients", "teamSchedule", "commissions"]
     : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "reports", "settings"];
 
 
