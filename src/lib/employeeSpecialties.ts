@@ -52,7 +52,7 @@ export function toggleSpecialty(employeeId: string, service: string) {
   write(all);
 }
 
-export function getEmployeesForService(service: string, allEmployees: { id: string; name: string }[]) {
+export function getEmployeesForService<T extends { id: string; name: string }>(service: string, allEmployees: T[]): T[] {
   const map = read();
   return allEmployees.filter((e) => (map[e.id] || []).includes(service));
 }
