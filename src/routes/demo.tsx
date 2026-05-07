@@ -232,9 +232,9 @@ function DemoPage() {
             ))}
           </div>
 
-          {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} />)}
+          {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} onSeeInactive={() => setTab("clients")} />)}
           {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
-          {tab === "clients" && <Clients />}
+          {tab === "clients" && <Clients isEmployee={isEmployee} />}
           {tab === "services" && !isEmployee && <Services />}
           {tab === "bot" && !isEmployee && <BotPage />}
           {tab === "reports" && !isEmployee && <Reports />}
@@ -242,6 +242,7 @@ function DemoPage() {
           {tab === "team" && !isEmployee && <TeamPage />}
           {tab === "performance" && !isEmployee && <TeamPerformance />}
           {tab === "commissions" && isEmployee && <EmployeeCommissions />}
+          {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
 
           {isEmployee && (
             <button
