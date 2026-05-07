@@ -112,6 +112,11 @@ export function MariSimulation() {
           🔄 Cliente recorrente — bot reconhece e sugere profissional preferida
         </div>
       )}
+      {convIdx === 4 && (
+        <div className="px-3 py-2 text-[11px] font-medium text-center" style={{ background: "oklch(0.97 0.025 25)", color: "var(--rose-gold-dark)" }}>
+          ⏱️ Bot calcula horários reais por duração de cada profissional
+        </div>
+      )}
       <div
         ref={scrollRef}
         className="h-[420px] overflow-y-auto px-3 py-4 space-y-2"
