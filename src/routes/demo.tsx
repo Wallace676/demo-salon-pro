@@ -804,14 +804,46 @@ function Td({ children, className = "" }: { children: React.ReactNode; className
   return <td className={`px-4 py-3 text-foreground ${className}`}>{children}</td>;
 }
 
-function Clients() {
+type ClientFilter = "todas" | "ativas" | "sumidas" | "novas";
+
+function Clients({ isEmployee = false }: { isEmployee?: boolean }) {
   const [openClient, setOpenClient] = useState<string | null>(null);
+  const [filter, setFilter] = useState<ClientFilter>("todas");
+
+  const inactiveNames = useMemo(() => new Set(INACTIVE_CLIENTS.map((c) => c.name)), []);
+  const filtered = useMemo(() => {
+    if (filter === "ativas") return DEMO_CLIENTS.filter((c) => !inactiveNames.has(c.name));
+    if (filter === "sumidas") return DEMO_CLIENTS.filter((c) => inactiveNames.has(c.name));
+    if (filter === "novas") return DEMO_CLIENTS.filter((c) => c.visits <= 6);
+    return DEMO_CLIENTS;
+  }, [filter, inactiveNames]);
+
   return (
     <div className="space-y-4 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
       <p className="text-sm text-muted-foreground">Clique em uma cliente para ver o histórico inteligente.</p>
+
+      {!isEmployee && (
+        <div className="flex flex-wrap gap-2">
+          {(["todas", "ativas", "sumidas", "novas"] as ClientFilter[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className="px-3 py-1.5 rounded-full text-xs font-semibold capitalize transition-all"
+              style={
+                filter === f
+                  ? { background: "var(--gradient-rose-gold)", color: "white", boxShadow: "var(--shadow-rose)" }
+                  : { background: "var(--secondary)", color: "var(--foreground)" }
+              }
+            >
+              {f === "sumidas" ? "😴 Sumidas" : f}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {DEMO_CLIENTS.map((c) => (
+        {filtered.map((c) => (
           <button
             key={c.id}
             onClick={() => setOpenClient(c.name)}
@@ -829,7 +861,13 @@ function Clients() {
             </div>
           </button>
         ))}
+        {filtered.length === 0 && (
+          <div className="col-span-full text-center text-sm text-muted-foreground py-8">Nenhum cliente encontrado.</div>
+        )}
       </div>
+
+      {!isEmployee && (filter === "todas" || filter === "sumidas") && <InactiveClientsSection />}
+
       {openClient && <ClientProfileModal clientName={openClient} onClose={() => setOpenClient(null)} />}
     </div>
   );
