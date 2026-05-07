@@ -1,6 +1,7 @@
 import { AlertTriangle } from "lucide-react";
 import { servicesStore } from "@/lib/demoStore";
 import { useEmployeeSpecialties, toggleSpecialty } from "@/lib/employeeSpecialties";
+import { useEmployeeDurations, setEmployeeDuration } from "@/lib/employeeDurations";
 
 const TEAM = [
   { id: "carla", name: "Carla Silva", color: "oklch(0.75 0.12 25)" },
@@ -13,6 +14,7 @@ const TEAM = [
 export function TeamPage() {
   const services = servicesStore.use();
   const specs = useEmployeeSpecialties();
+  const durations = useEmployeeDurations();
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -65,30 +67,50 @@ export function TeamPage() {
               <div className="space-y-1.5">
                 {services.map((s) => {
                   const on = allowed.includes(s.name);
+                  const personal = durations[emp.id]?.[s.name] ?? s.duration;
                   return (
-                    <label
+                    <div
                       key={s.id}
-                      className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg border border-border hover:bg-accent cursor-pointer transition-colors"
+                      className="px-3 py-2 rounded-lg border border-border space-y-1.5"
                     >
-                      <span className="text-sm text-foreground flex items-center gap-2">
-                        <span>{on ? "✅" : "❌"}</span>
-                        {s.name}
-                        {!on && <span className="text-xs text-muted-foreground">(não faz)</span>}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => toggleSpecialty(emp.id, s.name)}
-                        className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors"
-                        style={{
-                          background: on ? "var(--gradient-rose-gold)" : "var(--secondary)",
-                        }}
-                      >
-                        <span
-                          className="inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform"
-                          style={{ transform: on ? "translateX(20px)" : "translateX(3px)" }}
-                        />
-                      </button>
-                    </label>
+                      <label className="flex items-center justify-between gap-2 cursor-pointer">
+                        <span className="text-sm text-foreground flex items-center gap-2">
+                          <span>{on ? "✅" : "❌"}</span>
+                          {s.name}
+                          {!on && <span className="text-xs text-muted-foreground">(não faz)</span>}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleSpecialty(emp.id, s.name)}
+                          className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors"
+                          style={{
+                            background: on ? "var(--gradient-rose-gold)" : "var(--secondary)",
+                          }}
+                        >
+                          <span
+                            className="inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform"
+                            style={{ transform: on ? "translateX(20px)" : "translateX(3px)" }}
+                          />
+                        </button>
+                      </label>
+                      {on && (
+                        <div className="flex items-center gap-2 text-[11px] text-muted-foreground pl-6">
+                          <span>Padrão: {s.duration}min</span>
+                          <span>•</span>
+                          <span>Tempo da {emp.name.split(" ")[0]}:</span>
+                          <input
+                            type="number"
+                            min={5}
+                            max={240}
+                            step={5}
+                            value={personal}
+                            onChange={(e) => setEmployeeDuration(emp.id, s.name, Math.max(5, Number(e.target.value) || 5))}
+                            className="w-14 px-1.5 py-0.5 rounded border border-border bg-background text-right text-foreground"
+                          />
+                          <span>min</span>
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>
