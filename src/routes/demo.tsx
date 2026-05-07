@@ -536,10 +536,12 @@ function PricingCard({
 }
 
 
-function Dashboard({ ownerName }: { ownerName: string }) {
+function Dashboard({ ownerName, onSeeInactive }: { ownerName: string; onSeeInactive?: () => void }) {
   const appts = appointmentsStore.use();
   const todayKey = new Date().toISOString().slice(0, 10);
   const todayAppts = appts.filter((a) => a.date === todayKey);
+  const inactiveCount = INACTIVE_CLIENTS.length;
+  const inactivePreview = INACTIVE_CLIENTS.slice(0, 2).map((c) => c.name.split(" ")[0]).join(", ");
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -561,6 +563,24 @@ function Dashboard({ ownerName }: { ownerName: string }) {
         <StatCard icon={<DollarSign />} label="Faturamento do mês" value={`R$ ${DEMO_STATS.monthlyRevenue.toLocaleString("pt-BR")}`} />
         <StatCard icon={<TrendingUp />} label="Taxa de retorno" value={`${DEMO_STATS.returnRate}%`} />
       </div>
+
+      <button
+        onClick={onSeeInactive}
+        className="w-full text-left rounded-xl p-4 border flex items-center gap-4 transition-all hover:shadow-md"
+        style={{
+          borderColor: "oklch(0.80 0.15 35)",
+          background: "linear-gradient(135deg, oklch(0.97 0.06 40), oklch(0.96 0.08 25))",
+        }}
+      >
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ background: "white" }}>
+          <MoonStar className="w-5 h-5" style={{ color: "oklch(0.50 0.18 35)" }} />
+        </div>
+        <div className="flex-1">
+          <div className="font-semibold text-foreground">😴 {inactiveCount} clientes sumidas este mês</div>
+          <div className="text-xs text-muted-foreground">{inactivePreview} e mais {Math.max(0, inactiveCount - 2)}...</div>
+        </div>
+        <span className="text-sm font-semibold" style={{ color: "oklch(0.50 0.18 35)" }}>Ver todas →</span>
+      </button>
 
       <div className="grid lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-card rounded-xl p-5 border border-border">
