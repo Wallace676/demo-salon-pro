@@ -91,7 +91,7 @@ const TOUR_STEPS: TourStep[] = [
   { targetId: "tour-cta", title: "Pronto?", description: "Pronto para transformar seu salão? 💅" },
 ];
 
-type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team" | "teamSchedule";
+type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team" | "teamSchedule" | "leads";
 
 const TOUR_KEY = "demo_tour_seen_v2";
 
