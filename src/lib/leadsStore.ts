@@ -140,7 +140,8 @@ export function useLeads(): Lead[] {
   const [leads, setLeads] = useState<Lead[]>(() => (typeof window === "undefined" ? [] : getAll()));
   useEffect(() => {
     setLeads(getAll());
-    return leadsStore.subscribe(setLeads);
+    const unsub = leadsStore.subscribe(setLeads);
+    return () => { unsub; };
   }, []);
   return leads;
 }
