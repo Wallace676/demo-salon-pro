@@ -40,9 +40,12 @@ import { EmployeeNewClientModal } from "@/components/demo/EmployeeNewClientModal
 import { ClientProfileModal } from "@/components/demo/ClientProfileModal";
 import { InactiveClientsSection } from "@/components/demo/InactiveClientsSection";
 import { NotificationBell } from "@/components/demo/NotificationBell";
+import { LeadsBell } from "@/components/demo/LeadsBell";
+import { LeadsPage } from "@/components/demo/LeadsPage";
 import { INACTIVE_CLIENTS } from "@/lib/inactiveClients";
-import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar } from "lucide-react";
+import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar, Target } from "lucide-react";
 import { Crown } from "lucide-react";
+import { leadsStore } from "@/lib/leadsStore";
 import {
   appointmentsStore,
   servicesStore,
