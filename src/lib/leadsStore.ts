@@ -132,7 +132,9 @@ export const leadsStore = {
   get: getAll,
   subscribe(fn: Listener) {
     listeners.add(fn);
-    return () => listeners.delete(fn);
+    return () => {
+      listeners.delete(fn);
+    };
   },
 };
 
