@@ -211,6 +211,7 @@ function DemoPage() {
                 <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
                 <NavItem active={tab === "team"} onClick={() => setTab("team")} icon={<Users2 className="w-4 h-4" />}>Equipe</NavItem>
                 <NavItem active={tab === "performance"} onClick={() => setTab("performance")} icon={<BarChart3 className="w-4 h-4" />}>📊 Desempenho</NavItem>
+                <NavItem active={tab === "leads"} onClick={() => setTab("leads")} icon={<Target className="w-4 h-4" />}>🎯 Leads</NavItem>
                 <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
                 <NavItem active={tab === "settings"} onClick={() => setTab("settings")} icon={<SettingsIcon className="w-4 h-4" />}>Configurações</NavItem>
               </>
