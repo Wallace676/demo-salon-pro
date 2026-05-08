@@ -265,6 +265,7 @@ function DemoPage() {
           {tab === "settings" && !isEmployee && <SettingsPage />}
           {tab === "team" && !isEmployee && <TeamPage />}
           {tab === "performance" && !isEmployee && <TeamPerformance />}
+          {tab === "leads" && !isEmployee && <LeadsPage />}
           {tab === "commissions" && isEmployee && <EmployeeCommissions />}
           {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
 
