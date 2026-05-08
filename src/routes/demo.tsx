@@ -112,6 +112,26 @@ function DemoPage() {
     }
   }, [isEmployee, tab]);
 
+  // Real-time toast for new leads (owner view)
+  useEffect(() => {
+    if (!started || isEmployee) return;
+    let initial = leadsStore.get().length;
+    const unsub = leadsStore.subscribe((leads) => {
+      if (leads.length > initial) {
+        const latest = leads[0];
+        toast.success(`🎉 Novo lead capturado!`, {
+          description: `${latest.nomeResponsavel} — ${latest.nomeSalao}\nPlano: ${latest.plano}`,
+          duration: 8000,
+          action: { label: "Ver agora →", onClick: () => setTab("leads") },
+        });
+      }
+      initial = leads.length;
+    });
+    return () => {
+      unsub();
+    };
+  }, [started, isEmployee]);
+
   const goHome = () => {
     setStarted(false);
     setTourActive(false);
