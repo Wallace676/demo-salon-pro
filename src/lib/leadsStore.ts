@@ -141,7 +141,9 @@ export function useLeads(): Lead[] {
   useEffect(() => {
     setLeads(getAll());
     const unsub = leadsStore.subscribe(setLeads);
-    return () => { unsub; };
+    return () => {
+      unsub();
+    };
   }, []);
   return leads;
 }
