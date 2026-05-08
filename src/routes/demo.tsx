@@ -40,9 +40,12 @@ import { EmployeeNewClientModal } from "@/components/demo/EmployeeNewClientModal
 import { ClientProfileModal } from "@/components/demo/ClientProfileModal";
 import { InactiveClientsSection } from "@/components/demo/InactiveClientsSection";
 import { NotificationBell } from "@/components/demo/NotificationBell";
+import { LeadsBell } from "@/components/demo/LeadsBell";
+import { LeadsPage } from "@/components/demo/LeadsPage";
 import { INACTIVE_CLIENTS } from "@/lib/inactiveClients";
-import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar } from "lucide-react";
+import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar, Target } from "lucide-react";
 import { Crown } from "lucide-react";
+import { leadsStore } from "@/lib/leadsStore";
 import {
   appointmentsStore,
   servicesStore,
@@ -88,7 +91,7 @@ const TOUR_STEPS: TourStep[] = [
   { targetId: "tour-cta", title: "Pronto?", description: "Pronto para transformar seu salão? 💅" },
 ];
 
-type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team" | "teamSchedule";
+type Tab = "dashboard" | "appointments" | "clients" | "services" | "bot" | "reports" | "settings" | "commissions" | "performance" | "team" | "teamSchedule" | "leads";
 
 const TOUR_KEY = "demo_tour_seen_v2";
 
@@ -108,6 +111,26 @@ function DemoPage() {
       setTab("dashboard");
     }
   }, [isEmployee, tab]);
+
+  // Real-time toast for new leads (owner view)
+  useEffect(() => {
+    if (!started || isEmployee) return;
+    let initial = leadsStore.get().length;
+    const unsub = leadsStore.subscribe((leads) => {
+      if (leads.length > initial) {
+        const latest = leads[0];
+        toast.success(`🎉 Novo lead capturado!`, {
+          description: `${latest.nomeResponsavel} — ${latest.nomeSalao}\nPlano: ${latest.plano}`,
+          duration: 8000,
+          action: { label: "Ver agora →", onClick: () => setTab("leads") },
+        });
+      }
+      initial = leads.length;
+    });
+    return () => {
+      unsub();
+    };
+  }, [started, isEmployee]);
 
   const goHome = () => {
     setStarted(false);
@@ -129,7 +152,7 @@ function DemoPage() {
 
   const mobileTabs: Tab[] = isEmployee
     ? ["dashboard", "appointments", "clients", "teamSchedule", "commissions"]
-    : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "reports", "settings"];
+    : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "leads", "reports", "settings"];
 
 
   return (
@@ -148,7 +171,7 @@ function DemoPage() {
           <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
             <span className="font-bold truncate flex-1">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
-            {isEmployee && <NotificationBell />}
+            {isEmployee ? <NotificationBell /> : <LeadsBell onOpen={() => setTab("leads")} />}
           </div>
           <div className="px-3 pt-3">
             <button
@@ -188,6 +211,7 @@ function DemoPage() {
                 <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
                 <NavItem active={tab === "team"} onClick={() => setTab("team")} icon={<Users2 className="w-4 h-4" />}>Equipe</NavItem>
                 <NavItem active={tab === "performance"} onClick={() => setTab("performance")} icon={<BarChart3 className="w-4 h-4" />}>📊 Desempenho</NavItem>
+                <NavItem active={tab === "leads"} onClick={() => setTab("leads")} icon={<Target className="w-4 h-4" />}>🎯 Leads</NavItem>
                 <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
                 <NavItem active={tab === "settings"} onClick={() => setTab("settings")} icon={<SettingsIcon className="w-4 h-4" />}>Configurações</NavItem>
               </>
@@ -241,6 +265,7 @@ function DemoPage() {
           {tab === "settings" && !isEmployee && <SettingsPage />}
           {tab === "team" && !isEmployee && <TeamPage />}
           {tab === "performance" && !isEmployee && <TeamPerformance />}
+          {tab === "leads" && !isEmployee && <LeadsPage />}
           {tab === "commissions" && isEmployee && <EmployeeCommissions />}
           {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
 
