@@ -42,6 +42,8 @@ import { InactiveClientsSection } from "@/components/demo/InactiveClientsSection
 import { NotificationBell } from "@/components/demo/NotificationBell";
 import { LeadsBell } from "@/components/demo/LeadsBell";
 import { LeadsPage } from "@/components/demo/LeadsPage";
+import { MobileBottomNav, type MobileTabKey } from "@/components/demo/MobileBottomNav";
+import { MobileHeader } from "@/components/demo/MobileHeader";
 import { INACTIVE_CLIENTS } from "@/lib/inactiveClients";
 import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar, Target } from "lucide-react";
 import { Crown } from "lucide-react";
