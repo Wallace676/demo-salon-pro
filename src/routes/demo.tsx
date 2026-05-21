@@ -171,9 +171,7 @@ function DemoPage() {
 
   if (!started) return <Landing onStart={startDemo} salonName={settings.salonName} />;
 
-  const mobileTabs: Tab[] = isEmployee
-    ? ["dashboard", "appointments", "clients", "teamSchedule", "commissions"]
-    : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "leads", "reports", "settings"];
+
 
 
   return (
