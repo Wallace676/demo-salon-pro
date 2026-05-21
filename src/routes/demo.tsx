@@ -133,6 +133,24 @@ function DemoPage() {
     };
   }, [started, isEmployee]);
 
+  // Automatic appointment reminder (once per demo session)
+  useEffect(() => {
+    if (!started) return;
+    if (typeof window === "undefined") return;
+    if (sessionStorage.getItem("demo_reminder_fired_v1")) return;
+    const t = setTimeout(() => {
+      notify({
+        kind: "lembrete",
+        title: "⏰ Lembrete de agendamento",
+        body: "Juliana Costa chega em 30min — Coloração às 15h30",
+        duration: 7000,
+        actions: ["view"],
+      });
+      sessionStorage.setItem("demo_reminder_fired_v1", "1");
+    }, 20000);
+    return () => clearTimeout(t);
+  }, [started]);
+
   const goHome = () => {
     setStarted(false);
     setTourActive(false);
