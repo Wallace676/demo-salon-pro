@@ -55,6 +55,7 @@ import {
   type AppointmentStatus,
 } from "@/lib/demoStore";
 import { toast } from "sonner";
+import { notify } from "@/lib/notifications";
 import { professionalForAppointment, teamColor } from "@/lib/demoProfessionals";
 
 function ProfessionalChip({ name }: { name: string }) {
