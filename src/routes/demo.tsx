@@ -168,10 +168,11 @@ function DemoPage() {
               : { background: "var(--card)" }
           }
         >
-          <div className="p-5 border-b border-border flex items-center gap-2">
+          <div className="p-5 border-b border-border flex items-center gap-1">
             <Logo />
             <span className="font-bold truncate flex-1">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
-            {isEmployee ? <NotificationBell /> : <LeadsBell onOpen={() => setTab("leads")} />}
+            <NotificationBell />
+            {!isEmployee && <LeadsBell onOpen={() => setTab("leads")} />}
           </div>
           <div className="px-3 pt-3">
             <button
