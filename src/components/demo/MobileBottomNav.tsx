@@ -25,7 +25,7 @@ const EMPLOYEE_TABS: Item[] = [
 ];
 
 // Icons we re-export so we don't bring extras unused
-void Scissors; void Users2; void BarChart3; void Target; void TrendingUp;
+
 
 export function MobileBottomNav({
   active,
