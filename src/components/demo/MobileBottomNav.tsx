@@ -1,4 +1,4 @@
-import { Home, Calendar, Users, Scissors, MessageCircle, Users2, BarChart3, Target, TrendingUp, Settings as SettingsIcon, DollarSign, CalendarDays, LayoutDashboard } from "lucide-react";
+import { Home, Calendar, Users, MessageCircle, Settings as SettingsIcon, DollarSign, CalendarDays, LayoutDashboard } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export type MobileTabKey =
