@@ -42,6 +42,8 @@ import { InactiveClientsSection } from "@/components/demo/InactiveClientsSection
 import { NotificationBell } from "@/components/demo/NotificationBell";
 import { LeadsBell } from "@/components/demo/LeadsBell";
 import { LeadsPage } from "@/components/demo/LeadsPage";
+import { MobileBottomNav, type MobileTabKey } from "@/components/demo/MobileBottomNav";
+import { MobileHeader } from "@/components/demo/MobileHeader";
 import { INACTIVE_CLIENTS } from "@/lib/inactiveClients";
 import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar, Target } from "lucide-react";
 import { Crown } from "lucide-react";
@@ -169,9 +171,7 @@ function DemoPage() {
 
   if (!started) return <Landing onStart={startDemo} salonName={settings.salonName} />;
 
-  const mobileTabs: Tab[] = isEmployee
-    ? ["dashboard", "appointments", "clients", "teamSchedule", "commissions"]
-    : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "leads", "reports", "settings"];
+
 
 
   return (
@@ -249,67 +249,60 @@ function DemoPage() {
           </div>
         </aside>
 
-        <main className="flex-1 p-6 md:p-8 overflow-x-hidden">
-          <div className="flex items-center gap-2 mb-4 md:hidden">
-            <button
-              onClick={goHome}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
-              style={{
-                background: "transparent",
-                border: "1.5px solid var(--rose-gold)",
-                color: "var(--rose-gold-dark)",
-              }}
-            >
-              <Home className="w-3.5 h-3.5" /> ← Início
-            </button>
-          </div>
-          <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-2">
-            {mobileTabs.map((t) => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap ${tab === t ? "text-white" : "bg-secondary text-foreground"}`}
-                style={tab === t ? { background: "var(--gradient-rose-gold)" } : undefined}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
+        <MobileHeader
+          title={isEmployee ? EMPLOYEE_NAME : settings.salonName}
+          onBack={goHome}
+          isEmployee={isEmployee}
+          onOpenLeads={() => setTab("leads")}
+        />
 
-          {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} onSeeInactive={() => setTab("clients")} />)}
-          {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
-          {tab === "clients" && <Clients isEmployee={isEmployee} />}
-          {tab === "services" && !isEmployee && <Services />}
-          {tab === "bot" && !isEmployee && <BotPage />}
-          {tab === "reports" && !isEmployee && <Reports />}
-          {tab === "settings" && !isEmployee && <SettingsPage />}
-          {tab === "team" && !isEmployee && <TeamPage />}
-          {tab === "performance" && !isEmployee && <TeamPerformance />}
-          {tab === "leads" && !isEmployee && <LeadsPage />}
-          {tab === "commissions" && isEmployee && <EmployeeCommissions />}
-          {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
+        <main className="flex-1 p-6 md:p-8 overflow-x-hidden pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8 scroll-momentum">
+          <div key={tab} className="page-transition">
+            {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} onSeeInactive={() => setTab("clients")} />)}
+            {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
+            {tab === "clients" && <Clients isEmployee={isEmployee} />}
+            {tab === "services" && !isEmployee && <Services />}
+            {tab === "bot" && !isEmployee && <BotPage />}
+            {tab === "reports" && !isEmployee && <Reports />}
+            {tab === "settings" && !isEmployee && <SettingsPage />}
+            {tab === "team" && !isEmployee && <TeamPage />}
+            {tab === "performance" && !isEmployee && <TeamPerformance />}
+            {tab === "leads" && !isEmployee && <LeadsPage />}
+            {tab === "commissions" && isEmployee && <EmployeeCommissions />}
+            {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
+          </div>
 
           {isEmployee && (
             <button
               onClick={() => setEmpNewClientOpen(true)}
-              className="md:hidden fixed bottom-20 right-4 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full text-white font-semibold shadow-lg"
-              style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
+              className="tap-scale md:hidden fixed right-4 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full text-white font-semibold shadow-lg"
+              style={{
+                background: "var(--gradient-rose-gold)",
+                boxShadow: "var(--shadow-rose)",
+                bottom: "calc(5.25rem + env(safe-area-inset-bottom))",
+              }}
               aria-label="Nova Cliente"
             >
               <UserPlus className="w-5 h-5" />
             </button>
           )}
 
-          <div className="md:hidden mt-6">
+          <div className="hidden md:block mt-6">
             <button
               onClick={() => setExitOpen(true)}
-              className="w-full px-4 py-3 rounded-lg text-white font-semibold"
+              className="w-full px-4 py-3 rounded-lg text-white font-semibold tap-scale"
               style={{ background: "var(--gradient-rose-gold)" }}
             >
               Quero este sistema para meu salão →
             </button>
           </div>
         </main>
+
+        <MobileBottomNav
+          active={tab as MobileTabKey}
+          onChange={(k) => setTab(k as Tab)}
+          isEmployee={isEmployee}
+        />
       </div>
 
       {tourActive && !isEmployee && <DemoTour steps={TOUR_STEPS} onFinish={() => setTourActive(false)} />}
