@@ -256,8 +256,9 @@ function DemoPage() {
           onOpenLeads={() => setTab("leads")}
         />
 
-        <main className="flex-1 p-6 md:p-8 overflow-x-hidden pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8 scroll-momentum">
-          <div key={tab} className="page-transition">
+        <main className="flex-1 min-w-0 p-4 md:p-8 overflow-x-hidden pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8 scroll-momentum">
+          <div key={tab} className="page-transition min-w-0">
+
             {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} onSeeInactive={() => setTab("clients")} />)}
             {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
             {tab === "clients" && <Clients isEmployee={isEmployee} />}
