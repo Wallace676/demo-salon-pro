@@ -178,7 +178,7 @@ function DemoPage() {
     <div className="min-h-screen bg-background">
       <DemoBadge />
 
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-full overflow-x-hidden">
         <aside
           className="w-60 border-r border-border hidden md:flex flex-col transition-colors duration-300"
           style={
