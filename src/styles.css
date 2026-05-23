@@ -199,7 +199,7 @@
 
   #root {
     max-width: 100%;
-    overflow-x: clip;
+    overflow-x: hidden;
   }
 
   img, video, canvas, svg {

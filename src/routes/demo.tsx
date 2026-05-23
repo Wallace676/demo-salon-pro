@@ -178,7 +178,7 @@ function DemoPage() {
     <div className="min-h-screen bg-background">
       <DemoBadge />
 
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-full overflow-x-hidden">
         <aside
           className="w-60 border-r border-border hidden md:flex flex-col transition-colors duration-300"
           style={
@@ -596,7 +596,7 @@ function Dashboard({ ownerName, onSeeInactive }: { ownerName: string; onSeeInact
         <p className="text-muted-foreground text-sm">Aqui está o resumo do seu salão hoje.</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">
         <StatCard icon={<Calendar />} label="Agendamentos hoje" value={String(todayAppts.length || DEMO_STATS.todayAppointments)} accent />
         <StatCard icon={<Users />} label="Clientes ativos" value={String(DEMO_STATS.activeClients)} />
         <StatCard icon={<DollarSign />} label="Faturamento do mês" value={`R$ ${DEMO_STATS.monthlyRevenue.toLocaleString("pt-BR")}`} />
@@ -675,7 +675,7 @@ function Row({ label, value }: { label: string; value: string }) {
 
 function StatCard({ icon, label, value, accent }: { icon: React.ReactNode; label: string; value: string; accent?: boolean }) {
   return (
-    <div className="rounded-xl p-4 border border-border" style={accent ? { background: "var(--gradient-rose-gold)", color: "white", border: "none" } : { background: "var(--card)" }}>
+    <div className="rounded-xl p-4 border border-border min-w-0 overflow-hidden" style={accent ? { background: "var(--gradient-rose-gold)", color: "white", border: "none" } : { background: "var(--card)" }}>
       <div className={accent ? "opacity-90" : "text-muted-foreground"}><div className="w-8 h-8">{icon}</div></div>
       <div className={`text-2xl font-bold mt-2 ${accent ? "" : "text-foreground"}`}>{value}</div>
       <div className={`text-xs ${accent ? "opacity-90" : "text-muted-foreground"}`}>{label}</div>
