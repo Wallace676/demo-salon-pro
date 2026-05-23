@@ -675,7 +675,7 @@ function Row({ label, value }: { label: string; value: string }) {
 
 function StatCard({ icon, label, value, accent }: { icon: React.ReactNode; label: string; value: string; accent?: boolean }) {
   return (
-    <div className="rounded-xl p-4 border border-border" style={accent ? { background: "var(--gradient-rose-gold)", color: "white", border: "none" } : { background: "var(--card)" }}>
+    <div className="rounded-xl p-4 border border-border min-w-0 overflow-hidden" style={accent ? { background: "var(--gradient-rose-gold)", color: "white", border: "none" } : { background: "var(--card)" }}>
       <div className={accent ? "opacity-90" : "text-muted-foreground"}><div className="w-8 h-8">{icon}</div></div>
       <div className={`text-2xl font-bold mt-2 ${accent ? "" : "text-foreground"}`}>{value}</div>
       <div className={`text-xs ${accent ? "opacity-90" : "text-muted-foreground"}`}>{label}</div>
