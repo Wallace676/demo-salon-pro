@@ -42,8 +42,6 @@ import { InactiveClientsSection } from "@/components/demo/InactiveClientsSection
 import { NotificationBell } from "@/components/demo/NotificationBell";
 import { LeadsBell } from "@/components/demo/LeadsBell";
 import { LeadsPage } from "@/components/demo/LeadsPage";
-import { MobileBottomNav, type MobileTabKey } from "@/components/demo/MobileBottomNav";
-import { MobileHeader } from "@/components/demo/MobileHeader";
 import { INACTIVE_CLIENTS } from "@/lib/inactiveClients";
 import { BarChart3, Home, UserPlus, Users2, CalendarDays, MoonStar, Target } from "lucide-react";
 import { Crown } from "lucide-react";
@@ -57,7 +55,6 @@ import {
   type AppointmentStatus,
 } from "@/lib/demoStore";
 import { toast } from "sonner";
-import { notify } from "@/lib/notifications";
 import { professionalForAppointment, teamColor } from "@/lib/demoProfessionals";
 
 function ProfessionalChip({ name }: { name: string }) {
@@ -135,24 +132,6 @@ function DemoPage() {
     };
   }, [started, isEmployee]);
 
-  // Automatic appointment reminder (once per demo session)
-  useEffect(() => {
-    if (!started) return;
-    if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("demo_reminder_fired_v1")) return;
-    const t = setTimeout(() => {
-      notify({
-        kind: "lembrete",
-        title: "⏰ Lembrete de agendamento",
-        body: "Juliana Costa chega em 30min — Coloração às 15h30",
-        duration: 7000,
-        actions: ["view"],
-      });
-      sessionStorage.setItem("demo_reminder_fired_v1", "1");
-    }, 20000);
-    return () => clearTimeout(t);
-  }, [started]);
-
   const goHome = () => {
     setStarted(false);
     setTourActive(false);
@@ -171,27 +150,28 @@ function DemoPage() {
 
   if (!started) return <Landing onStart={startDemo} salonName={settings.salonName} />;
 
-
+  const mobileTabs: Tab[] = isEmployee
+    ? ["dashboard", "appointments", "clients", "teamSchedule", "commissions"]
+    : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "leads", "reports", "settings"];
 
 
   return (
-    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-background">
+    <div className="min-h-screen bg-background">
       <DemoBadge />
 
-      <div className="flex min-h-screen w-full max-w-full overflow-x-hidden">
+      <div className="flex min-h-screen">
         <aside
-          className="hidden w-0 overflow-hidden border-r border-border transition-colors duration-300 md:fixed md:inset-y-0 md:left-0 md:z-20 md:flex md:w-60 md:flex-col md:overflow-visible"
+          className="w-60 border-r border-border hidden md:flex flex-col transition-colors duration-300"
           style={
             isEmployee
               ? { background: "linear-gradient(180deg, oklch(0.98 0.015 25), var(--card))" }
               : { background: "var(--card)" }
           }
         >
-          <div className="p-5 border-b border-border flex items-center gap-1">
+          <div className="p-5 border-b border-border flex items-center gap-2">
             <Logo />
             <span className="font-bold truncate flex-1">{isEmployee ? EMPLOYEE_NAME : settings.salonName}</span>
-            <NotificationBell />
-            {!isEmployee && <LeadsBell onOpen={() => setTab("leads")} />}
+            {isEmployee ? <NotificationBell /> : <LeadsBell onOpen={() => setTab("leads")} />}
           </div>
           <div className="px-3 pt-3">
             <button
@@ -249,61 +229,67 @@ function DemoPage() {
           </div>
         </aside>
 
-        <MobileHeader
-          title={isEmployee ? EMPLOYEE_NAME : settings.salonName}
-          onBack={goHome}
-          isEmployee={isEmployee}
-          onOpenLeads={() => setTab("leads")}
-        />
-
-        <main className="flex-1 min-w-0 w-full max-w-full overflow-x-hidden p-4 pb-[calc(5rem+env(safe-area-inset-bottom))] scroll-momentum md:ml-60 md:p-8 md:pb-8">
-          <div key={tab} className="page-transition min-w-0 w-full max-w-full overflow-x-hidden">
-
-            {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} onSeeInactive={() => setTab("clients")} />)}
-            {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
-            {tab === "clients" && <Clients isEmployee={isEmployee} />}
-            {tab === "services" && !isEmployee && <Services />}
-            {tab === "bot" && !isEmployee && <BotPage />}
-            {tab === "reports" && !isEmployee && <Reports />}
-            {tab === "settings" && !isEmployee && <SettingsPage />}
-            {tab === "team" && !isEmployee && <TeamPage />}
-            {tab === "performance" && !isEmployee && <TeamPerformance />}
-            {tab === "leads" && !isEmployee && <LeadsPage />}
-            {tab === "commissions" && isEmployee && <EmployeeCommissions />}
-            {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
+        <main className="flex-1 p-6 md:p-8 overflow-x-hidden">
+          <div className="flex items-center gap-2 mb-4 md:hidden">
+            <button
+              onClick={goHome}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
+              style={{
+                background: "transparent",
+                border: "1.5px solid var(--rose-gold)",
+                color: "var(--rose-gold-dark)",
+              }}
+            >
+              <Home className="w-3.5 h-3.5" /> ← Início
+            </button>
           </div>
+          <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-2">
+            {mobileTabs.map((t) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap ${tab === t ? "text-white" : "bg-secondary text-foreground"}`}
+                style={tab === t ? { background: "var(--gradient-rose-gold)" } : undefined}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+
+          {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} onSeeInactive={() => setTab("clients")} />)}
+          {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
+          {tab === "clients" && <Clients isEmployee={isEmployee} />}
+          {tab === "services" && !isEmployee && <Services />}
+          {tab === "bot" && !isEmployee && <BotPage />}
+          {tab === "reports" && !isEmployee && <Reports />}
+          {tab === "settings" && !isEmployee && <SettingsPage />}
+          {tab === "team" && !isEmployee && <TeamPage />}
+          {tab === "performance" && !isEmployee && <TeamPerformance />}
+          {tab === "leads" && !isEmployee && <LeadsPage />}
+          {tab === "commissions" && isEmployee && <EmployeeCommissions />}
+          {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
 
           {isEmployee && (
             <button
               onClick={() => setEmpNewClientOpen(true)}
-              className="tap-scale md:hidden fixed right-4 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full text-white font-semibold shadow-lg"
-              style={{
-                background: "var(--gradient-rose-gold)",
-                boxShadow: "var(--shadow-rose)",
-                bottom: "calc(5.25rem + env(safe-area-inset-bottom))",
-              }}
+              className="md:hidden fixed bottom-20 right-4 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full text-white font-semibold shadow-lg"
+              style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
               aria-label="Nova Cliente"
             >
               <UserPlus className="w-5 h-5" />
             </button>
           )}
 
-          <div className="hidden md:block mt-6">
+          <div className="md:hidden mt-6">
             <button
               onClick={() => setExitOpen(true)}
-              className="w-full px-4 py-3 rounded-lg text-white font-semibold tap-scale"
+              className="w-full px-4 py-3 rounded-lg text-white font-semibold"
               style={{ background: "var(--gradient-rose-gold)" }}
             >
               Quero este sistema para meu salão →
             </button>
           </div>
         </main>
-
-        <MobileBottomNav
-          active={tab as MobileTabKey}
-          onChange={(k) => setTab(k as Tab)}
-          isEmployee={isEmployee}
-        />
       </div>
 
       {tourActive && !isEmployee && <DemoTour steps={TOUR_STEPS} onFinish={() => setTourActive(false)} />}
@@ -583,7 +569,7 @@ function Dashboard({ ownerName, onSeeInactive }: { ownerName: string; onSeeInact
   const inactivePreview = INACTIVE_CLIENTS.slice(0, 2).map((c) => c.name.split(" ")[0]).join(", ");
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       <div
         className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white"
         style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
@@ -596,7 +582,7 @@ function Dashboard({ ownerName, onSeeInactive }: { ownerName: string; onSeeInact
         <p className="text-muted-foreground text-sm">Aqui está o resumo do seu salão hoje.</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={<Calendar />} label="Agendamentos hoje" value={String(todayAppts.length || DEMO_STATS.todayAppointments)} accent />
         <StatCard icon={<Users />} label="Clientes ativos" value={String(DEMO_STATS.activeClients)} />
         <StatCard icon={<DollarSign />} label="Faturamento do mês" value={`R$ ${DEMO_STATS.monthlyRevenue.toLocaleString("pt-BR")}`} />
@@ -675,7 +661,7 @@ function Row({ label, value }: { label: string; value: string }) {
 
 function StatCard({ icon, label, value, accent }: { icon: React.ReactNode; label: string; value: string; accent?: boolean }) {
   return (
-    <div className="rounded-xl p-4 border border-border min-w-0 overflow-hidden" style={accent ? { background: "var(--gradient-rose-gold)", color: "white", border: "none" } : { background: "var(--card)" }}>
+    <div className="rounded-xl p-4 border border-border" style={accent ? { background: "var(--gradient-rose-gold)", color: "white", border: "none" } : { background: "var(--card)" }}>
       <div className={accent ? "opacity-90" : "text-muted-foreground"}><div className="w-8 h-8">{icon}</div></div>
       <div className={`text-2xl font-bold mt-2 ${accent ? "" : "text-foreground"}`}>{value}</div>
       <div className={`text-xs ${accent ? "opacity-90" : "text-muted-foreground"}`}>{label}</div>
@@ -700,7 +686,7 @@ function Appointments({ isEmployee = false }: { isEmployee?: boolean }) {
   const handleNew = () => setOpen(true);
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-4 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       {confetti && <Confetti duration={2000} />}
       {isEmployee && (
         <div
@@ -761,7 +747,7 @@ function Appointments({ isEmployee = false }: { isEmployee?: boolean }) {
 
 function EmployeeDashboard() {
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Olá, {EMPLOYEE_NAME}! 💅</h1>
         <p className="text-muted-foreground text-sm">Aqui está sua agenda de hoje</p>
@@ -858,7 +844,7 @@ function Clients({ isEmployee = false }: { isEmployee?: boolean }) {
   }, [filter, inactiveNames]);
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-4 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
       <p className="text-sm text-muted-foreground">Clique em uma cliente para ver o histórico inteligente.</p>
 
@@ -925,7 +911,7 @@ function Services() {
   };
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-4 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-2xl font-bold text-foreground">Serviços</h1>
         <button
@@ -967,7 +953,7 @@ function Services() {
 
 function BotPage() {
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Bot WhatsApp — Mari 💅</h1>
         <p className="text-muted-foreground text-sm">Veja sua atendente virtual em ação.</p>
@@ -1007,7 +993,7 @@ function Reports() {
   const max = Math.max(...byService.map((s) => s.total), 1);
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Relatórios</h1>
       <div className="grid sm:grid-cols-3 gap-4">
         <StatCard icon={<DollarSign />} label="Faturamento" value={`R$ ${totalRevenue.toLocaleString("pt-BR")}`} accent />
