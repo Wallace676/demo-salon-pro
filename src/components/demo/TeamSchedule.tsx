@@ -88,7 +88,7 @@ export function TeamSchedule() {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-4 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-foreground">👥 Agenda da Equipe</h1>
         <p className="text-sm text-muted-foreground">

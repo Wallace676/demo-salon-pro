@@ -35,7 +35,7 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl">
+    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in md:max-w-4xl">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Configurações</h1>
         <p className="text-muted-foreground text-sm">Personalize seu salão.</p>

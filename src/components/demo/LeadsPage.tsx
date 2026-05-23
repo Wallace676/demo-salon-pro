@@ -95,7 +95,7 @@ export function LeadsPage() {
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-5 animate-fade-in">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Leads Capturados</h1>

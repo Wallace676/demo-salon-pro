@@ -17,7 +17,7 @@ export function TeamPage() {
   const durations = useEmployeeDurations();
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Equipe</h1>
         <p className="text-muted-foreground text-sm">
