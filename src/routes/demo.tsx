@@ -175,12 +175,12 @@ function DemoPage() {
 
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-background">
       <DemoBadge />
 
-      <div className="flex min-h-screen w-full overflow-x-hidden">
+      <div className="flex min-h-screen w-full max-w-full overflow-x-hidden">
         <aside
-          className="w-60 border-r border-border hidden md:flex flex-col transition-colors duration-300"
+          className="hidden w-0 overflow-hidden border-r border-border transition-colors duration-300 md:fixed md:inset-y-0 md:left-0 md:z-20 md:flex md:w-60 md:flex-col md:overflow-visible"
           style={
             isEmployee
               ? { background: "linear-gradient(180deg, oklch(0.98 0.015 25), var(--card))" }
@@ -256,8 +256,8 @@ function DemoPage() {
           onOpenLeads={() => setTab("leads")}
         />
 
-        <main className="flex-1 min-w-0 p-4 md:p-8 overflow-x-hidden pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8 scroll-momentum">
-          <div key={tab} className="page-transition min-w-0">
+        <main className="flex-1 min-w-0 w-full max-w-full overflow-x-hidden p-4 pb-[calc(5rem+env(safe-area-inset-bottom))] scroll-momentum md:ml-60 md:p-8 md:pb-8">
+          <div key={tab} className="page-transition min-w-0 w-full max-w-full overflow-x-hidden">
 
             {tab === "dashboard" && (isEmployee ? <EmployeeDashboard /> : <Dashboard ownerName={settings.ownerName} onSeeInactive={() => setTab("clients")} />)}
             {tab === "appointments" && <Appointments isEmployee={isEmployee} />}
@@ -583,7 +583,7 @@ function Dashboard({ ownerName, onSeeInactive }: { ownerName: string; onSeeInact
   const inactivePreview = INACTIVE_CLIENTS.slice(0, 2).map((c) => c.name.split(" ")[0]).join(", ");
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
       <div
         className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white"
         style={{ background: "var(--gradient-rose-gold)", boxShadow: "var(--shadow-rose)" }}
@@ -700,7 +700,7 @@ function Appointments({ isEmployee = false }: { isEmployee?: boolean }) {
   const handleNew = () => setOpen(true);
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-4 animate-fade-in">
       {confetti && <Confetti duration={2000} />}
       {isEmployee && (
         <div
@@ -761,7 +761,7 @@ function Appointments({ isEmployee = false }: { isEmployee?: boolean }) {
 
 function EmployeeDashboard() {
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Olá, {EMPLOYEE_NAME}! 💅</h1>
         <p className="text-muted-foreground text-sm">Aqui está sua agenda de hoje</p>
@@ -858,7 +858,7 @@ function Clients({ isEmployee = false }: { isEmployee?: boolean }) {
   }, [filter, inactiveNames]);
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-4 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
       <p className="text-sm text-muted-foreground">Clique em uma cliente para ver o histórico inteligente.</p>
 
@@ -925,7 +925,7 @@ function Services() {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-4 animate-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-2xl font-bold text-foreground">Serviços</h1>
         <button
@@ -967,7 +967,7 @@ function Services() {
 
 function BotPage() {
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Bot WhatsApp — Mari 💅</h1>
         <p className="text-muted-foreground text-sm">Veja sua atendente virtual em ação.</p>
@@ -1007,7 +1007,7 @@ function Reports() {
   const max = Math.max(...byService.map((s) => s.total), 1);
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-6 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Relatórios</h1>
       <div className="grid sm:grid-cols-3 gap-4">
         <StatCard icon={<DollarSign />} label="Faturamento" value={`R$ ${totalRevenue.toLocaleString("pt-BR")}`} accent />
