@@ -134,7 +134,7 @@ export function TeamPerformance() {
   const maxRevenue = Math.max(...EMPLOYEES.map((e) => e.revenue));
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="w-full max-w-full overflow-x-hidden space-y-8 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>

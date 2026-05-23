@@ -184,7 +184,8 @@
     text-size-adjust: 100%;
   }
 
-  html, body {
+  html, body, #root {
+    width: 100%;
     max-width: 100%;
     overflow-x: hidden;
   }
@@ -195,11 +196,6 @@
     overscroll-behavior-y: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  #root {
-    max-width: 100%;
-    overflow-x: hidden;
   }
 
   img, video, canvas, svg {

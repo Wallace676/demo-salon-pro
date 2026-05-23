@@ -40,10 +40,10 @@ export function MobileBottomNav({
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-bottom-nav safe-bottom"
+      className="md:hidden fixed inset-x-0 bottom-0 z-40 w-full max-w-full overflow-x-hidden glass-bottom-nav safe-bottom"
       aria-label="Navegação principal"
     >
-      <ul className="grid grid-cols-5 px-1 pt-1.5">
+      <ul className="grid w-full grid-cols-5 px-1 pt-1.5">
         {items.map((it) => {
           const isActive = active === it.key;
           const Icon = it.icon;
