@@ -596,7 +596,7 @@ function Dashboard({ ownerName, onSeeInactive }: { ownerName: string; onSeeInact
         <p className="text-muted-foreground text-sm">Aqui está o resumo do seu salão hoje.</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">
         <StatCard icon={<Calendar />} label="Agendamentos hoje" value={String(todayAppts.length || DEMO_STATS.todayAppointments)} accent />
         <StatCard icon={<Users />} label="Clientes ativos" value={String(DEMO_STATS.activeClients)} />
         <StatCard icon={<DollarSign />} label="Faturamento do mês" value={`R$ ${DEMO_STATS.monthlyRevenue.toLocaleString("pt-BR")}`} />
