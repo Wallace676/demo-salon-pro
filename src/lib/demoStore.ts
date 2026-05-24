@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { DEMO_APPOINTMENTS, DEMO_SERVICES } from "./demoData";
 
-export type AppointmentStatus = "confirmado" | "pendente" | "cancelado";
+export type AppointmentStatus = "confirmado" | "pendente" | "cancelado" | "concluido";
 
 export type Appointment = {
   id: string;
@@ -13,6 +13,8 @@ export type Appointment = {
   time: string; // HH:MM
   notes?: string;
   status: AppointmentStatus;
+  professional?: string;
+  duration?: number; // minutes
 };
 
 export type Service = {
