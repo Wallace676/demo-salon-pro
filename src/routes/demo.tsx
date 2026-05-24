@@ -670,8 +670,9 @@ function StatusBadge({ status }: { status: AppointmentStatus }) {
     confirmado: { label: "Confirmado", bg: "oklch(0.92 0.10 145)", fg: "oklch(0.35 0.15 145)" },
     pendente: { label: "Pendente", bg: "oklch(0.95 0.10 90)", fg: "oklch(0.45 0.15 70)" },
     cancelado: { label: "Cancelado", bg: "oklch(0.93 0.06 25)", fg: "oklch(0.45 0.20 25)" },
+    concluido: { label: "Concluído", bg: "oklch(0.92 0.08 250)", fg: "oklch(0.35 0.15 250)" },
   } as const;
-  const s = map[status];
+  const s = map[status] ?? map.confirmado;
   return <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: s.bg, color: s.fg }}>{s.label}</span>;
 }
 
