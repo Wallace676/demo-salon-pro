@@ -288,7 +288,7 @@ function DemoPage() {
           {tab === "performance" && !isEmployee && <TeamPerformance />}
           {tab === "leads" && !isEmployee && <LeadsPage />}
           {tab === "commissions" && isEmployee && <EmployeeCommissions />}
-          {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
+          {tab === "teamSchedule" && <TeamSchedule />}
 
           {isEmployee && (
             <button
