@@ -2,7 +2,7 @@
   "name": "BellaSalon",
   "short_name": "BellaSalon",
   "description": "Sistema de gestão para salões de beleza",
-  "start_url": "/",
+  "start_url": "/demo",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
