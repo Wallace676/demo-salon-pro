@@ -171,7 +171,7 @@ function DemoPage() {
 
   const mobileTabs: Tab[] = isEmployee
     ? ["dashboard", "appointments", "clients", "teamSchedule", "commissions"]
-    : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "leads", "reports", "settings"];
+    : ["dashboard", "appointments", "clients", "services", "bot", "team", "teamSchedule", "performance", "leads", "reports", "settings"];
 
 
   return (
