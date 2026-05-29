@@ -171,7 +171,7 @@ function DemoPage() {
 
   const mobileTabs: Tab[] = isEmployee
     ? ["dashboard", "appointments", "clients", "teamSchedule", "commissions"]
-    : ["dashboard", "appointments", "clients", "services", "bot", "team", "performance", "leads", "reports", "settings"];
+    : ["dashboard", "appointments", "clients", "services", "bot", "team", "teamSchedule", "performance", "leads", "reports", "settings"];
 
 
   return (
@@ -230,6 +230,7 @@ function DemoPage() {
                 <NavItem active={tab === "services"} onClick={() => setTab("services")} icon={<Scissors className="w-4 h-4" />}>Serviços</NavItem>
                 <NavItem id="tour-bot" active={tab === "bot"} onClick={() => setTab("bot")} icon={<MessageCircle className="w-4 h-4" />}>Bot WhatsApp</NavItem>
                 <NavItem active={tab === "team"} onClick={() => setTab("team")} icon={<Users2 className="w-4 h-4" />}>Equipe</NavItem>
+                <NavItem active={tab === "teamSchedule"} onClick={() => setTab("teamSchedule")} icon={<CalendarDays className="w-4 h-4" />}>👥 Agenda da Equipe</NavItem>
                 <NavItem active={tab === "performance"} onClick={() => setTab("performance")} icon={<BarChart3 className="w-4 h-4" />}>📊 Desempenho</NavItem>
                 <NavItem active={tab === "leads"} onClick={() => setTab("leads")} icon={<Target className="w-4 h-4" />}>🎯 Leads</NavItem>
                 <NavItem active={tab === "reports"} onClick={() => setTab("reports")} icon={<TrendingUp className="w-4 h-4" />}>Relatórios</NavItem>
@@ -287,7 +288,7 @@ function DemoPage() {
           {tab === "performance" && !isEmployee && <TeamPerformance />}
           {tab === "leads" && !isEmployee && <LeadsPage />}
           {tab === "commissions" && isEmployee && <EmployeeCommissions />}
-          {tab === "teamSchedule" && isEmployee && <TeamSchedule />}
+          {tab === "teamSchedule" && <TeamSchedule />}
 
           {isEmployee && (
             <button
